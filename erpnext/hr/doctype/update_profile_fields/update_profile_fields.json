@@ -1,0 +1,42 @@
+{
+ "creation": "2021-01-15 22:58:09.915843",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "fields_name",
+  "existing_data",
+  "new_data"
+ ],
+ "fields": [
+  {
+   "fieldname": "fields_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Fields Name"
+  },
+  {
+   "fieldname": "existing_data",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Existing Data"
+  },
+  {
+   "fieldname": "new_data",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "New Data"
+  }
+ ],
+ "istable": 1,
+ "modified": "2021-01-15 23:17:54.843841",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Update Profile fields",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

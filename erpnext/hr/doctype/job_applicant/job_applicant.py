@@ -7,11 +7,12 @@ from __future__ import unicode_literals
 from frappe.model.document import Document
 import frappe
 from frappe import _
-from frappe.utils import comma_and, validate_email_address
+from frappe.utils import comma_and, validate_email_address,today
 
 sender_field = "email_id"
 
 class DuplicationError(frappe.ValidationError): pass
+
 
 class JobApplicant(Document):
 	def onload(self):
@@ -26,7 +27,7 @@ class JobApplicant(Document):
 		self.name = " - ".join(keys)
 
 	def validate(self):
-		self.check_email_id_is_unique()
+		#self.check_email_id_is_unique()
 		if self.email_id:
 			validate_email_address(self.email_id, True)
 
@@ -42,3 +43,37 @@ class JobApplicant(Document):
 			if names:
 				frappe.throw(_("Email Address must be unique, already exists for {0}").format(comma_and(names)), frappe.DuplicateEntryError)
 
+	def get_employee_skill(self):
+		self.set('employee_skill_map', [])
+#               parameters = get_template_details(self.quality_inspection_template)
+		parameters = frappe.get_all('Appraisal Goal', fields=["kra",'per_weightage','score','score_earned'],
+                                filters={'parenttype': 'Interview', 'parent': self.interview}, order_by="idx")
+		for d in parameters:
+			child = self.append('employee_skill_map', {})
+			child.kra = d.kra
+			child.per_weightage = d.per_weightage
+			child.score = d.score
+			child.score_earned = d.score_earned
+#		self.set('total_score' "3")
+		average_score = frappe.get_value('Interview', self.interview, 'total_score')
+		self.total_socre = average_score
+
+	def get_employee_skill_map(self):
+		self.set('emplyee_skill_match', [])
+		parameters = frappe.get_all('Appraisal Goal', fields=["kra",'per_weightage','score','score_earned'],
+                                filters={'parenttype': 'Interview', 'parent': self.interview2}, order_by="idx")
+		for d in parameters:
+			child = self.append('emplyee_skill_match', {})
+			child.kra = d.kra
+			child.per_weightage = d.per_weightage
+			child.score = d.score
+			child.score_earned = d.score_earned
+		average_score = frappe.get_value('Interview', self.interview2, 'total_score')
+		self.total_score1 = average_score
+
+@frappe.whitelist() 
+def aadhar_check(aadhar): 
+	if aadhar:
+		employee = frappe.db.sql_list("""select name from `tabEmployee`
+                                where aadhar_card_number=%s """, (aadhar))
+	return employee

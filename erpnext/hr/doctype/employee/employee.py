@@ -19,6 +19,7 @@ class EmployeeLeftValidationError(frappe.ValidationError): pass
 
 class Employee(NestedSet):
 	nsm_parent_field = 'reports_to'
+	nsm_parent_field  = 'hod'
 
 	def autoname(self):
 		naming_method = frappe.db.get_value("HR Settings", None, "emp_created_by")
@@ -46,6 +47,7 @@ class Employee(NestedSet):
 		self.validate_status()
 		self.validate_reports_to()
 		self.validate_preferred_email()
+		self.update_batch()
 		if self.job_applicant:
 			self.validate_onboarding_process()
 
@@ -56,6 +58,33 @@ class Employee(NestedSet):
 			if existing_user_id:
 				remove_user_permission(
 					"Employee", self.name, existing_user_id)
+
+		if self.referred_employee:
+			referred=self.get_employee_referral()
+			if not referred:
+				refer=frappe.new_doc("Employee Referral")
+				refer.employee=self.referred_employee
+				refer.employee_name = self.referred_employee_name
+				refer.employee_referral=self.name
+				refer.employee_referral_name= self.employee_name
+				refer.confirmation_date=self.final_confirmation_date
+				refer.date_of_joining=self.date_of_joining
+				refer.department= self.department
+				refer.save()
+	def get_employee_referral(self):
+		referral=frappe.db.sql('''select * from `tabEmployee Referral` where employee_referral=%(emp)s''',{"emp":self.name})
+		return referral
+	def update_batch(self):
+		pass
+		#if self.training_batch:
+			#training_batch_name = frappe.get_doc("Training Batch", self.training_batch)
+#			training_batch_name.set('training_event_employee', [])
+			#frappe.msgprint(str(training_batch_name.enrolled_applicants))
+			#child = training_batch_name.append('training_event_employee', {})
+			#frappe.msgprint(str(self.name))
+			#child.employee = self.name
+			#child.insert()
+			#training_batch_name.save()
 
 	def set_employee_name(self):
 		self.employee_name = ' '.join(filter(lambda x: x, [self.first_name, self.middle_name, self.last_name]))
@@ -439,3 +468,4 @@ def has_user_permission_for_employee(user_name, employee_name):
 		'allow': 'Employee',
 		'for_value': employee_name
 	})
+

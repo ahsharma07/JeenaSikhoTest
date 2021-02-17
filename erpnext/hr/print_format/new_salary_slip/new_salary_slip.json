@@ -1,0 +1,23 @@
+{
+ "align_labels_right": 0,
+ "creation": "2021-02-09 13:39:31.051759",
+ "custom_format": 0,
+ "default_print_language": "en",
+ "disabled": 0,
+ "doc_type": "Salary Slip",
+ "docstatus": 0,
+ "doctype": "Print Format",
+ "font": "Default",
+ "idx": 0,
+ "line_breaks": 0,
+ "modified": "2021-02-09 13:39:39.991666",
+ "modified_by": "muskan@extensioncrm.com",
+ "module": "HR",
+ "name": "new salary slip",
+ "owner": "muskan@extensioncrm.com",
+ "print_format_builder": 0,
+ "print_format_type": "Jinja",
+ "raw_printing": 0,
+ "show_section_headings": 0,
+ "standard": "Yes"
+}

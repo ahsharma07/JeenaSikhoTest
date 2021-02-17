@@ -3,10 +3,14 @@
 
 from __future__ import unicode_literals
 import frappe
+from frappe import realtime
+import json
+import js2py
 from frappe import _
 from frappe.utils import (cstr, validate_email_address, cint, comma_and, has_gravatar, now, getdate, nowdate)
 from frappe.model.mapper import get_mapped_doc
-
+import requests
+import datetime
 from erpnext.controllers.selling_controller import SellingController
 from frappe.contacts.address_and_contact import load_address_and_contact
 from erpnext.accounts.party import set_taxes
@@ -268,3 +272,101 @@ def get_lead_with_phone_number(number):
 	lead = leads[0].name if leads else None
 
 	return lead
+
+@frappe.whitelist()
+def call(phone,agent_id):
+	url=f"https://45.248.160.107:8475/CrmDial?exeUserName={agent_id}@jeenasikho&phoneNumber={phone}&skill=TESTSKL&listId=1"
+	response = requests.request("GET", url,verify=False)
+	data=json.loads(response.text.encode('utf8'))
+	if data.get("response")=="Success":
+		return "Outgoing"
+	elif data.get("message").__contains__("not logged in."):
+		return "Agent not logged in"
+
+@frappe.whitelist()
+def end_call(agent_id,disposition,time=None):
+	if disposition=="HANGUP":
+		url=f"https://45.248.160.107:8475/CrmHangup?exeUserName={agent_id}@jeenasikho&disposition={disposition}:HU"
+	else:
+		url=f"https://45.248.160.107:8475/CrmHangup?exeUserName={agent_id}@jeenasikho&disposition={disposition}:CB &callbackDate={time} "
+	response=requests.request("GET",url,verify=False)
+	data=json.loads(response.text.encode('utf-8'))
+	frappe.publish_realtime('realtime_updates',message="Yes",room='my_room',user=frappe.session.user)
+	if data:
+		if data.get("response")=="Success":
+			return "Call Ended"
+		elif data.get("message").__contains__("not logged in."):
+			return "Agent not logged in"
+	else:
+		frappe.throw("Dialer is not working Properly")
+
+
+@frappe.whitelist(allow_guest=True)
+def incoming_call_handle(**kwargs):
+	lead_fields={"mobile_no":"8360608030",'lead_name':"8360608030"}
+	popup_content = frappe.render_template("erpnext/templates/lead_info.html", lead_fields)
+	frappe.publish_realtime(event='msgprint',message=popup_content,user="Administrator")
+
+	try:
+		frappe.log_error(kwargs,"IVR")
+		call_payload = kwargs
+		#lead_fields={"mobile_no":call_payload.get('phone'),'lead_name':call_payload.get('phone')}
+		#popup_content = frappe.render_template("erpnext/templates/lead_info.html", lead_fields)
+		#frappe.publish_realtime(event='msgprint',message=popup_content,user="Administrator")
+		call_log = get_call_log(call_payload)
+		if not call_log:
+			create_call_log(call_payload)
+		else:
+			update_call_log(call_payload, call_log=call_log)
+	except Exception as e:
+		frappe.db.rollback()
+		frappe.log_error(title=_('Error in Handling incoming call'))
+
+		frappe.db.commit()
+@frappe.whitelist(allow_guest=True)
+def handle_end_call(**kwargs):
+	frappe.log_error(kwargs,"End IVR")
+	update_call_log(kwargs, 'Completed')
+@frappe.whitelist()
+def get_call_log(call_payload):
+	call_log = frappe.get_all('Call Log', {
+		'id': call_payload.get('id'),
+	}, limit=1)
+
+	if call_log:
+		return frappe.get_doc('Call Log', call_log[0].name)
+@frappe.whitelist()
+def create_call_log(call_payload):
+	#frappe.throw('show_call_popup')
+	call_log = frappe.new_doc('Call Log')
+	call_log.id = call_payload.get('id')
+	call_log.to = call_payload.get('DialWhomNumber')
+	if call_payload.get('callmode')=="IB":
+		call_log.medium = "Incoming"
+	elif call_payload.get('callmode')=="MB":
+		call_log.medium="Missed Call"
+	else:
+		call_log.medium="Outgoing"
+	call_log.status = 'Ringing'
+	setattr(call_log, 'from', call_payload.get('phone'))
+	call_log.save(ignore_permissions=True)
+	frappe.db.commit()
+	create_popup()
+	return call_log
+@frappe.whitelist()
+def update_call_log(call_payload, status='Ringing', call_log=None):
+	call_log = call_log or get_call_log(call_payload)
+	if call_log:
+		call_log.status = status
+		call_log.to = call_payload.get('DialWhomNumber')
+		#call_log.duration = call_payload.get('DialCallDuration') or 0
+		call_log.recording_url = call_payload.get('RecordingUrl')
+		call_log.save(ignore_permissions=True)
+		frappe.db.commit()
+		return call_log
+@frappe.whitelist()
+def create_popup():
+	lead_fields={"mobile":"8360608030"}
+	frappe.msgprint("hello")
+	popup_content = frappe.render_template("erpnext/templates/lead_info.html", lead_fields)
+	frappe.publish_realtime(event="msgprint",message=popup_content, user="neha@extensioncrm.com")

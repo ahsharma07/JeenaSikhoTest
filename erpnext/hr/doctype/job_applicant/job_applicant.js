@@ -19,6 +19,7 @@ frappe.ui.form.on("Job Applicant", {
 						"job_applicant": frm.doc.name,
 						"applicant_name": frm.doc.applicant_name,
 						"designation": frm.doc.job_opening,
+						"employee_grade":frm.doc.employee_grade
 					};
 					frappe.new_doc("Job Offer");
 				});

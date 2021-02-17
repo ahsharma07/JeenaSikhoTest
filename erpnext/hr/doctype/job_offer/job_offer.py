@@ -40,8 +40,60 @@ class JobOffer(Document):
 				"company": self.company
 			}, fields=['name'])
 
+	def get_employee_grade_slab(self):
+		self.set('employee_grade_slab', [])
+#            parameters = get_template_details(self.quality_inspection_template)
+		parameters = frappe.get_all('Employee Grade Slab', fields=["components","yearly","monthly"],
+                                filters={'parenttype': 'Employee Grade', 'parent': self.employee_grade}, order_by="idx")
+		for d in parameters:
+			child = self.append('employee_grade_slab', {})
+			child.components = d.components
+			child.monthly = d.monthly
+			child.yearly = d.yearly
+	def on_submit(self):
+		selected_applicant = frappe.db.get_value("Job Requisition Form", self.job_requisition_form, "total_selected_applicant")
+		required_employee = frappe.db.get_value("Job Requisition Form", self.job_requisition_form, "no_of_required_emp")
+		if self.status == "Accepted":
+			selected_applicant += 1
+			frappe.set_value("Job Requisition Form", self.job_requisition_form, "total_selected_applicant", selected_applicant)
+		elif self.status == "Rejected" and not selected_applicant == 0:
+			selected_applicant -= 1
+			frappe.set_value("Job Requisition Form", self.job_requisition_form, "total_selected_applicant", selected_applicant)
+
+		if selected_applicant == required_employee:
+			frappe.set_value("Job Requisition Form", self.job_requisition_form, "status", "Completed")
+		elif selected_applicant > 0 :
+			frappe.set_value("Job Requisition Form", self.job_requisition_form, "status", "In - Progress")
+		else:
+			frappe.set_value("Job Requisition Form", self.job_requisition_form, "status", "Open")
+
+		selected_applicant = frappe.db.get_value("Training Batch", self.training_batch, "enrolled_applicants")
+		if self.status == "Accepted":
+			selected_applicant += 1
+			frappe.set_value("Training Batch", self.training_batch, "enrolled_applicants", selected_applicant)
+		elif self.status == "Rejected" and not selected_applicant == 0:
+			selected_applicant -= 1
+			frappe.set_value("Training Batch", self.training_batch, "enrolled_applicants", selected_applicant)
+
+	def on_update_after_submit(self):
+		selected_applicant = frappe.db.get_value("Job Requisition Form", self.job_requisition_form, "total_selected_applicant")
+		if self.status == "Accepted":
+			selected_applicant += 1
+			frappe.set_value("Job Requisition Form", self.job_requisition_form, "total_selected_applicant", selected_applicant)
+		elif self.status == "Rejected" and not selected_applicant == 0:
+			selected_applicant -= 1
+			frappe.set_value("Job Requisition Form", self.job_requisition_form, "total_selected_applicant", selected_applicant)
+
+		selected_applicant = frappe.db.get_value("Training Batch", self.training_batch, "enrolled_applicants")
+		if self.status == "Accepted":
+			selected_applicant += 1
+			frappe.set_value("Training Batch", self.training_batch, "enrolled_applicants", selected_applicant)
+		elif self.status == "Rejected" and not selected_applicant == 0:
+			selected_applicant -= 1
+			frappe.set_value("Training Batch", self.training_batch, "enrolled_applicants", selected_applicant)
+
 def update_job_applicant(status, job_applicant):
-	if status in ("Accepted", "Rejected"):
+	if status in ("Selected", "Rejected"):
 		frappe.set_value("Job Applicant", job_applicant, "status", status)
 
 def get_staffing_plan_detail(designation, company, offer_date):
@@ -72,6 +124,23 @@ def make_employee(source_name, target_doc=None):
 				"doctype": "Employee",
 				"field_map": {
 					"applicant_name": "employee_name",
+					"applicant_name": "first_name",
+					"offer_date": "date_of_joining",
+					"gender":"gender",
+					"date_of_birth":"date_of_birth",
+					"training_batch":"training_batch"
 				}}
 		}, target_doc, set_missing_values)
 	return doc
+
+@frappe.whitelist()
+def get_employee_grade_slab(self):
+	self.set('employee_grade_slab', [])
+#            parameters = get_template_details(self.quality_inspection_template)
+	parameters = frappe.get_all('Employee Grade Slab', fields=["componets","yearly","monthly"],
+                                filters={'parenttype': 'Employee Grade', 'parent': self.employee_grade}, order_by="idx")
+	for d in parameters:
+		child = self.append('employee_grade_slab', {})
+		child.components = d.components
+		child.monthly = d.monthly
+		child.yearly = d.yearly

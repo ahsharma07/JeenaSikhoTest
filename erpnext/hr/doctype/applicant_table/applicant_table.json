@@ -1,0 +1,35 @@
+{
+ "creation": "2020-10-07 12:14:23.837918",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "date",
+  "selected_applicant"
+ ],
+ "fields": [
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date"
+  },
+  {
+   "fieldname": "selected_applicant",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Selected Applicant"
+  }
+ ],
+ "istable": 1,
+ "modified": "2020-10-07 12:23:20.141989",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Applicant Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

@@ -1,0 +1,28 @@
+{
+ "add_total_row": 0,
+ "creation": "2021-02-08 17:17:36.830131",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "idx": 0,
+ "is_standard": "Yes",
+ "modified": "2021-02-08 18:30:53.932784",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Training Batch",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "query": "select `tabEmployee`.first_name,\n`tabEmployee`.date_of_birth,\n`tabEmployee`.cell_number,\n`tabEmployee`.default_shift as shift,\n`tabJob Applicant`.Qualification,\n`tabJob Applicant`.father_name,\n`tabSalary Slip`.gross_pay as CTC\nfrom `tabEmployee`,`tabJob Applicant`,`tabSalary Slip`;",
+ "ref_doctype": "Training Batch",
+ "report_name": "Training Batch",
+ "report_type": "Query Report",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "HR User"
+  }
+ ]
+}

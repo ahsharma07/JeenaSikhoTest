@@ -1,0 +1,92 @@
+{
+ "autoname": "fieldname:tracking_id",
+ "creation": "2020-11-09 12:24:05.743869",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "tracking_id",
+  "current_status",
+  "delivered_on",
+  "column_break_4",
+  "promised_delivery_date",
+  "received_by",
+  "is_alloted",
+  "section_break_7",
+  "tracking_details"
+ ],
+ "fields": [
+  {
+   "fieldname": "tracking_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Tracking ID/AWB No",
+   "reqd": 1
+  },
+  {
+   "fieldname": "current_status",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Current Status"
+  },
+  {
+   "fieldname": "promised_delivery_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Promised Delivery Date"
+  },
+  {
+   "fieldname": "delivered_on",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Delivered On"
+  },
+  {
+   "fieldname": "received_by",
+   "fieldtype": "Data",
+   "label": "Received By"
+  },
+  {
+   "fieldname": "tracking_details",
+   "fieldtype": "Table",
+   "label": "Tracking Details",
+   "options": "Tracking Details"
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_7",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_alloted",
+   "fieldtype": "Check",
+   "label": "Is alloted"
+  }
+ ],
+ "modified": "2020-11-10 10:05:16.264660",
+ "modified_by": "Administrator",
+ "module": "CRM",
+ "name": "Courier Tracking",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

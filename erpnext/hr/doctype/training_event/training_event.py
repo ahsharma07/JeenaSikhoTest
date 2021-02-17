@@ -21,3 +21,15 @@ class TrainingEvent(Document):
 	def validate_period(self):
 		if time_diff_in_seconds(self.end_time, self.start_time) <= 0:
 			frappe.throw(_('End time cannot be before start time'))
+
+	def get_attendence(self):
+		self.set('employees', [])
+#               parameters = get_template_details(self.quality_inspection_template)
+		parameters = frappe.get_all('Training Event Employee', fields=["employee",'employee_name','status','attendance'],
+                                filters={'parenttype': 'Training Batch', 'parent': self.training_batch}, order_by="idx")
+		for d in parameters:
+			child = self.append('employees', {})
+			child.employee = d.employee
+			child.employee_name = d.employee_name
+			child.status = d.status
+			child.attendance = d.attendance

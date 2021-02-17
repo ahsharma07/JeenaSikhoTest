@@ -8,6 +8,7 @@
  "field_order": [
   "supplier_section",
   "title",
+  "abbr",
   "naming_series",
   "supplier",
   "get_items_from_open_material_requests",
@@ -151,7 +152,7 @@
    "no_copy": 1,
    "oldfieldname": "naming_series",
    "oldfieldtype": "Select",
-   "options": "PUR-ORD-.YYYY.-",
+   "options": "PO-.abbr.-\nPUR-ORD-.YYYY.-",
    "print_hide": 1,
    "reqd": 1,
    "set_only_once": 1
@@ -1050,13 +1051,20 @@
    "fieldtype": "Link",
    "label": "Set Reserve Warehouse",
    "options": "Warehouse"
+  },
+  {
+   "fetch_from": "company.abbr",
+   "fieldname": "abbr",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Abbr",
+   "read_only": 1
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 105,
  "is_submittable": 1,
- "links": [],
- "modified": "2020-09-14 14:36:12.418690",
+ "modified": "2020-11-03 12:46:15.067156",
  "modified_by": "Administrator",
  "module": "Buying",
  "name": "Purchase Order",

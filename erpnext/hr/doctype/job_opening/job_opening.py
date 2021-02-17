@@ -9,18 +9,25 @@ import frappe
 from frappe.website.website_generator import WebsiteGenerator
 from frappe import _
 from erpnext.hr.doctype.staffing_plan.staffing_plan import get_designation_counts, get_active_staffing_plan_details
+from frappe.model.naming import make_autoname
 
 class JobOpening(WebsiteGenerator):
 	website = frappe._dict(
 		template = "templates/generators/job_opening.html",
 		condition_field = "publish",
-		page_title_field = "job_title",
+		page_title_field = "job_title"
 	)
 
 	def validate(self):
 		if not self.route:
 			self.route = frappe.scrub(self.job_title).replace('_', '-')
 		self.validate_current_vacancies()
+
+	def autoname(self):
+		keys = filter(None, (self.job_title))
+		if not keys:
+			frappe.throw(_("Job Title is mandatory"), frappe.NameError)
+		self.name = make_autoname(self.job_title + "-" + self.location + "-.###")
 
 	def validate_current_vacancies(self):
 		if not self.staffing_plan:
@@ -56,7 +63,7 @@ def get_list_context(context):
 	context.get_list = get_job_openings
 
 def get_job_openings(doctype, txt=None, filters=None, limit_start=0, limit_page_length=20, order_by=None):
-	fields = ['name', 'status', 'job_title', 'description']
+	fields = ['name', 'status', 'job_title', 'description','location','job_type']
 
 	filters = filters or {}
 	filters.update({

@@ -1,0 +1,55 @@
+{
+ "allow_rename": 1,
+ "autoname": "field:interview",
+ "creation": "2020-10-08 17:10:49.080223",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "interview",
+  "goals",
+  "total_score"
+ ],
+ "fields": [
+  {
+   "fieldname": "interview",
+   "fieldtype": "Data",
+   "label": "Interview",
+   "unique": 1
+  },
+  {
+   "fieldname": "goals",
+   "fieldtype": "Table",
+   "label": "Applicant Goals",
+   "options": "Appraisal Goal"
+  },
+  {
+   "fieldname": "total_score",
+   "fieldtype": "Float",
+   "label": "Average Score (Out of 5)"
+  }
+ ],
+ "modified": "2020-10-26 10:31:14.524568",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Interview",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

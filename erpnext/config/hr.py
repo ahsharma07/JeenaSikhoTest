@@ -40,6 +40,11 @@ def get_data():
 					"type": "doctype",
 					"name": "Employee Health Insurance"
 				},
+				{
+					"type" : "doctype",
+					"name" : "Employee Referral",
+					"onboard":1,
+				},
 			]
 		},
 		{
@@ -298,9 +303,12 @@ def get_data():
 					"onboard": 1,
 				},
 				{
-					"type": "doctype",
-					"name": "Staffing Plan",
-				},
+                                        "type": "doctype",
+                                        "name": "Job Requisition Form",
+                                        "onboard": 1,
+                                },
+				
+
 			]
 		},
 		{

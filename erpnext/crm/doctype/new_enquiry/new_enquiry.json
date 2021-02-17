@@ -1,0 +1,435 @@
+{
+ "creation": "2020-10-20 16:22:10.594545",
+ "doctype": "DocType",
+ "document_type": "Setup",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "mobile_number",
+  "column_break",
+  "salutation",
+  "column_break_2",
+  "name1",
+  "column_break_4",
+  "agent_name",
+  "sb",
+  "country",
+  "district",
+  "pincode",
+  "exp_del_time",
+  "column_break_20",
+  "state",
+  "tehsil",
+  "city1",
+  "profile",
+  "delivered_by",
+  "column_break_21",
+  "address",
+  "city",
+  "landmark",
+  "alternate_no",
+  "gender",
+  "channel",
+  "blood_group",
+  "section_break_34",
+  "age",
+  "diseases",
+  "how_many_years",
+  "column_break_36",
+  "weight",
+  "operative_surgery_full_details_hospital_name",
+  "occupation",
+  "column_break_38",
+  "height",
+  "disease_cure",
+  "medicine_expense_in_a_month_and_treatment_type",
+  "problems_section",
+  "column_break_6",
+  "query_category",
+  "column_break_8",
+  "query_type",
+  "section_break_4",
+  "section_break_6",
+  "items",
+  "section_break_42",
+  "delivery_charges",
+  "column_break_12",
+  "total",
+  "section2",
+  "product",
+  "product_name",
+  "product_description",
+  "section1",
+  "remarks",
+  "section_break_57",
+  "disposition1",
+  "column_break_18",
+  "callback_date",
+  "section_break_51",
+  "history"
+ ],
+ "fields": [
+  {
+   "bold": 1,
+   "fieldname": "mobile_number",
+   "fieldtype": "Data",
+   "label": "Mobile Number",
+   "length": 10
+  },
+  {
+   "fetch_from": "pincode.state_name",
+   "fieldname": "state",
+   "fieldtype": "Select",
+   "label": "State",
+   "options": "\nAMAZON\nANDAMAN AND NICOBAR ISLANDS\t\t\tANDHRA PRADESH\nARUNACHAL PRADESH\nASSAM\nBIHAR\nCHANDIGARH\nCHHATTISGARH\nCHITTAGONG\nDADRA & NAGAR HAVELI\nDAMAN & DIU\nDELHI\nGOA\nGUJARAT\nHARYANA\nHIMACHAL PRADESH\nJAMMU & KASHMIR\nJHARKHAND\nKARNATAKA\nKERALA\nLAKSHADWEEP\nMADHYA PRADESH\nMAHARASHTRA\nMANIPUR\nMEGHALAYA\nMIZORAM\nNAGALAND\nORISSA\nOut Of India\nPONDICHERRY\nPUNJAB\nRAJASTHAN\nSIKKIM\nTAMIL NADU\nTELANGANA\nTRIPURA\nUTTAR PRADESH\nUTTARAKHAND\nWEST BENGAL"
+  },
+  {
+   "fetch_from": "pincode.related_headoffice",
+   "fieldname": "tehsil",
+   "fieldtype": "Select",
+   "label": "Tehsil"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "pincode",
+   "fieldtype": "Link",
+   "label": "Pincode",
+   "options": "Pincode Master"
+  },
+  {
+   "fetch_from": "pincode.district_name",
+   "fieldname": "district",
+   "fieldtype": "Select",
+   "label": "City"
+  },
+  {
+   "fetch_from": "pincode.related_suboffice",
+   "fieldname": "city1",
+   "fieldtype": "Select",
+   "label": "Area"
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "bold": 1,
+   "fieldname": "name1",
+   "fieldtype": "Data",
+   "label": "Name"
+  },
+  {
+   "fieldname": "gender",
+   "fieldtype": "Select",
+   "label": "Gender",
+   "options": "\nMale\nFemale"
+  },
+  {
+   "fieldname": "blood_group",
+   "fieldtype": "Select",
+   "label": "Blood Group",
+   "options": "\nA+\nA-\nB+\nB-\nAB+\nAB-\nO+\nO-"
+  },
+  {
+   "fieldname": "age",
+   "fieldtype": "Data",
+   "label": "Age(Years)"
+  },
+  {
+   "fieldname": "address",
+   "fieldtype": "Small Text",
+   "label": "Address"
+  },
+  {
+   "fieldname": "city",
+   "fieldtype": "Data",
+   "label": "City"
+  },
+  {
+   "fieldname": "landmark",
+   "fieldtype": "Data",
+   "label": "Landmark"
+  },
+  {
+   "fieldname": "channel",
+   "fieldtype": "Select",
+   "label": "Channel",
+   "options": "ZEE TV\n4TV"
+  },
+  {
+   "fieldname": "weight",
+   "fieldtype": "Data",
+   "label": "Weight(KG)"
+  },
+  {
+   "fieldname": "height",
+   "fieldtype": "Data",
+   "label": "Height(cms)"
+  },
+  {
+   "fieldname": "diseases",
+   "fieldtype": "Data",
+   "label": "Disease/Problem"
+  },
+  {
+   "fieldname": "operative_surgery_full_details_hospital_name",
+   "fieldtype": "Data",
+   "label": "Operative / Surgery full Details + Hospital Name"
+  },
+  {
+   "fieldname": "disease_cure",
+   "fieldtype": "Data",
+   "label": "Which Disease you want to cure 1st"
+  },
+  {
+   "fieldname": "how_many_years",
+   "fieldtype": "Int",
+   "label": "How Many Years you suffering in this Disease/Problem"
+  },
+  {
+   "fieldname": "medicine_expense_in_a_month_and_treatment_type",
+   "fieldtype": "Data",
+   "label": "Medicine Expense in a Month and Treatment Type"
+  },
+  {
+   "fieldname": "occupation",
+   "fieldtype": "Select",
+   "label": "Occupation",
+   "options": "\nService\nBusiness\nHousewife"
+  },
+  {
+   "fieldname": "problems_section",
+   "fieldtype": "Section Break",
+   "label": "Problems"
+  },
+  {
+   "fieldname": "section_break_4",
+   "fieldtype": "Section Break",
+   "label": "Search"
+  },
+  {
+   "depends_on": "eval:doc.mobile_number",
+   "fieldname": "column_break_6",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_18",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "disposition1",
+   "fieldtype": "Select",
+   "label": "Disposition",
+   "options": "HANGUP\nCALLBACK"
+  },
+  {
+   "fieldname": "agent_name",
+   "fieldtype": "Data",
+   "label": "Agent Name",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.disposition1==\"CALLBACK\";",
+   "fieldname": "callback_date",
+   "fieldtype": "Datetime",
+   "label": "CallBack Date"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Items",
+   "options": "New Enquiry Item"
+  },
+  {
+   "depends_on": "eval:doc.query_category == \"Product Purchase\";",
+   "fieldname": "section_break_6",
+   "fieldtype": "Section Break",
+   "label": "Product Details"
+  },
+  {
+   "fieldname": "delivery_charges",
+   "fieldtype": "Currency",
+   "label": "Delivery Charges",
+   "options": "Currency"
+  },
+  {
+   "fieldname": "column_break_12",
+   "fieldtype": "Column Break"
+  },
+  {
+   "bold": 1,
+   "fieldname": "total",
+   "fieldtype": "Currency",
+   "label": "Total",
+   "options": "Currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "country",
+   "fieldtype": "Select",
+   "label": "Country",
+   "options": "India"
+  },
+  {
+   "fieldname": "column_break_20",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_21",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "In Days",
+   "fieldname": "exp_del_time",
+   "fieldtype": "Int",
+   "label": "Expected Delivery Time"
+  },
+  {
+   "fieldname": "profile",
+   "fieldtype": "Select",
+   "label": "Profile",
+   "options": "Ok"
+  },
+  {
+   "fieldname": "delivered_by",
+   "fieldtype": "Select",
+   "label": "Delivered By",
+   "options": "Courier"
+  },
+  {
+   "fieldname": "alternate_no",
+   "fieldtype": "Data",
+   "label": "Alternate No"
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "eval:doc.mobile_number;",
+   "fieldname": "section_break_34",
+   "fieldtype": "Section Break",
+   "label": "Personal Details"
+  },
+  {
+   "fieldname": "column_break_36",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_38",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.query_category == \"Product Purchase\";",
+   "fieldname": "section_break_42",
+   "fieldtype": "Section Break",
+   "label": "Total & Charges"
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "eval:doc.mobile_number;",
+   "fieldname": "sb",
+   "fieldtype": "Section Break",
+   "label": "Address & Details"
+  },
+  {
+   "fieldname": "history",
+   "fieldtype": "HTML",
+   "label": "History"
+  },
+  {
+   "fieldname": "section_break_51",
+   "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "eval:doc.mobile_number",
+   "fieldname": "section1",
+   "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "eval: doc.query_category == \"General Query\";",
+   "fieldname": "query_type",
+   "fieldtype": "Select",
+   "label": "Query Type",
+   "options": "\nProduct Query\nClinic Query\nOther Query\nFeedback/Suggestion"
+  },
+  {
+   "fieldname": "query_category",
+   "fieldtype": "Select",
+   "label": "Query category",
+   "options": "\nGeneral Query\nProduct Purchase\nAppointment for Clinic"
+  },
+  {
+   "fieldname": "column_break_8",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.query_type == 'Product Query'",
+   "fieldname": "section2",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "product",
+   "fieldtype": "Link",
+   "label": "Product",
+   "options": "Item"
+  },
+  {
+   "fetch_from": "product.product_details",
+   "fieldname": "product_description",
+   "fieldtype": "Text Editor",
+   "label": "Product Description",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "product.item_name",
+   "fieldname": "product_name",
+   "fieldtype": "Data",
+   "label": "Product Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "salutation",
+   "fieldtype": "Link",
+   "label": "Salutation",
+   "options": "Salutation"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Text Editor",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "section_break_57",
+   "fieldtype": "Section Break"
+  }
+ ],
+ "hide_toolbar": 1,
+ "issingle": 1,
+ "modified": "2021-02-12 12:34:59.482943",
+ "modified_by": "Administrator",
+ "module": "CRM",
+ "name": "New Enquiry",
+ "owner": "administrator3@jslcpl.com",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "show_preview_popup": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

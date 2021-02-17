@@ -1,5 +1,4 @@
 {
- "actions": [],
  "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:salary_component",
@@ -38,7 +37,9 @@
   "amount_based_on_formula",
   "formula",
   "column_break_28",
-  "help"
+  "help",
+  "base_amount",
+  "loan"
  ],
  "fields": [
   {
@@ -231,11 +232,21 @@
    "fieldname": "exempted_from_income_tax",
    "fieldtype": "Check",
    "label": "Exempted from Income Tax"
+  },
+  {
+   "fieldname": "base_amount",
+   "fieldtype": "Currency",
+   "label": "Base",
+   "reqd": 1
+  },
+  {
+   "fieldname": "loan",
+   "fieldtype": "Text",
+   "label": "LN"
   }
  ],
  "icon": "fa fa-flag",
- "links": [],
- "modified": "2020-04-28 15:46:45.252945",
+ "modified": "2020-12-02 16:46:22.382597",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Salary Component",

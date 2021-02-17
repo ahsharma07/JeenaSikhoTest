@@ -8,6 +8,12 @@
 <h1>{{ job_title }}</h1>
 {% endblock %}
 
+{% block style %}<style>
+div#page-list {
+    background-color: darkred;
+}</style>
+{% endblock %}
+
 {% block page_content %}
 
 {%- if description -%}

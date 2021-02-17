@@ -7,6 +7,7 @@
  "field_order": [
   "customer_section",
   "title",
+  "abbr",
   "naming_series",
   "customer",
   "customer_name",
@@ -207,7 +208,7 @@
    "no_copy": 1,
    "oldfieldname": "naming_series",
    "oldfieldtype": "Select",
-   "options": "ACC-SINV-.YYYY.-",
+   "options": "SINV-.abbr.-\nACC-SINV-.YYYY.-",
    "print_hide": 1,
    "reqd": 1,
    "set_only_once": 1
@@ -1564,12 +1565,19 @@
   {
    "fieldname": "dimension_col_break",
    "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "company.abbr",
+   "fieldname": "abbr",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Abbr"
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 181,
  "is_submittable": 1,
- "modified": "2020-07-01 12:41:29.484813",
+ "modified": "2020-11-03 12:34:10.493788",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Sales Invoice",

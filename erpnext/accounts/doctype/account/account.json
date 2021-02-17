@@ -1,7 +1,7 @@
 {
- "actions": [],
  "allow_copy": 1,
  "allow_import": 1,
+ "allow_rename": 1,
  "creation": "2013-01-30 12:49:46",
  "description": "Heads (or groups) against which Accounting Entries are made and balances are maintained.",
  "doctype": "DocType",
@@ -198,8 +198,7 @@
  "icon": "fa fa-money",
  "idx": 1,
  "is_tree": 1,
- "links": [],
- "modified": "2020-03-18 18:26:03.992861",
+ "modified": "2020-10-23 15:00:24.740013",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Account",

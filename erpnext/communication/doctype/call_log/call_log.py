@@ -18,6 +18,7 @@ class CallLog(Document):
 
 	def after_insert(self):
 		self.trigger_call_popup()
+		frappe.log_error("after insert","ivr")
 
 	def on_update(self):
 		doc_before_save = self.get_doc_before_save()
@@ -26,6 +27,7 @@ class CallLog(Document):
 			frappe.publish_realtime('call_{id}_disconnected'.format(id=self.id), self)
 		elif doc_before_save.to != self.to:
 			self.trigger_call_popup()
+		frappe.log_error("on update","ivr")
 
 	def trigger_call_popup(self):
 		scheduled_employees = get_scheduled_employees_for_popup(self.medium)

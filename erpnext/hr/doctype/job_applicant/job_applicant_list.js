@@ -10,6 +10,8 @@ frappe.listview_settings['Job Applicant'] = {
 			return [__(doc.status), "orange", "status,=," + doc.status];
 		} else if (["Hold", "Rejected"].includes(doc.status)) {
 			return [__(doc.status), "red", "status,=," + doc.status];
-		}
+		} else if (doc.status == "Selected") {
+                        return [__(doc.status), "green", "status,=," + doc.status];
+                }
 	}
 };

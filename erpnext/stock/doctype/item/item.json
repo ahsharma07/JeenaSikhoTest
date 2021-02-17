@@ -20,6 +20,7 @@
   "stock_uom",
   "column_break0",
   "disabled",
+  "product_purchase",
   "allow_alternative_item",
   "is_stock_item",
   "include_item_in_manufacturing",
@@ -344,8 +345,7 @@
   {
    "fieldname": "shelf_life_in_days",
    "fieldtype": "Int",
-   "label": "Shelf Life In Days",
-   "mandatory_depends_on": "eval:doc.has_batch_no && doc.has_expiry_date"
+   "label": "Shelf Life In Days"
   },
   {
    "default": "2099-12-31",
@@ -1053,6 +1053,12 @@
    "fieldtype": "Data",
    "label": "Default Manufacturer Part No",
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "product_purchase",
+   "fieldtype": "Check",
+   "label": "Is Standard Item in Product Purchase"
   }
  ],
  "has_web_view": 1,
@@ -1060,7 +1066,7 @@
  "idx": 2,
  "image_field": "image",
  "max_attachments": 1,
- "modified": "2020-08-06 17:03:26.594319",
+ "modified": "2021-02-11 15:34:16.178977",
  "modified_by": "Administrator",
  "module": "Stock",
  "name": "Item",
