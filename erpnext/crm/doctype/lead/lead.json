@@ -1,7 +1,7 @@
 {
  "allow_events_in_timeline": 1,
  "allow_import": 1,
- "autoname": "field:phone",
+ "autoname": "JS-LEAD-.######.",
  "creation": "2013-04-10 11:45:37",
  "doctype": "DocType",
  "document_type": "Document",
@@ -18,14 +18,33 @@
   "status",
   "gender",
   "source",
+  "phone",
   "customer",
   "campaign_name",
   "image",
-  "section_break_12",
-  "contact_by",
-  "column_break_14",
-  "contact_date",
-  "ends_on",
+  "personal_details_section",
+  "age",
+  "height",
+  "column_break_18",
+  "weight",
+  "diseases",
+  "section_break_21",
+  "query_category",
+  "section_break_24",
+  "clinic_country",
+  "column_break_26",
+  "clinic_state",
+  "column_break_28",
+  "clinic_district",
+  "clinic_details_section",
+  "clinic",
+  "clinic_name",
+  "clinic_map",
+  "doctor_name",
+  "column_break_33",
+  "clinic_address",
+  "doctor_id",
+  "schedule_date",
   "notes_section",
   "notes",
   "contact_info",
@@ -33,7 +52,6 @@
   "address_html",
   "column_break2",
   "contact_html",
-  "phone",
   "salutation",
   "mobile_no",
   "fax",
@@ -47,13 +65,19 @@
   "column_break3",
   "company",
   "unsubscribed",
-  "blog_subscriber"
+  "blog_subscriber",
+  "section_break_12",
+  "contact_by",
+  "column_break_14",
+  "contact_date",
+  "ends_on"
  ],
  "fields": [
   {
    "default": "0",
    "fieldname": "organization_lead",
    "fieldtype": "Check",
+   "hidden": 1,
    "label": "Lead is an Organization",
    "set_only_once": 1
   },
@@ -69,7 +93,7 @@
    "no_copy": 1,
    "oldfieldname": "naming_series",
    "oldfieldtype": "Select",
-   "options": "CRM-LEAD-.YYYY.-",
+   "options": "JS-LEAD-",
    "set_only_once": 1
   },
   {
@@ -85,7 +109,7 @@
   {
    "fieldname": "company_name",
    "fieldtype": "Data",
-   "in_list_view": 1,
+   "hidden": 1,
    "label": "Organization Name",
    "oldfieldname": "company_name",
    "oldfieldtype": "Data"
@@ -139,6 +163,7 @@
   {
    "fieldname": "source",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Source",
    "oldfieldname": "source",
    "oldfieldtype": "Select",
@@ -171,6 +196,7 @@
    "print_hide": 1
   },
   {
+   "depends_on": "eval:!doc.__islocal",
    "fieldname": "section_break_12",
    "fieldtype": "Section Break",
    "label": "Follow Up"
@@ -214,10 +240,12 @@
   {
    "fieldname": "notes",
    "fieldtype": "Text Editor",
-   "label": "Notes"
+   "label": "Notes",
+   "reqd": 1
   },
   {
    "collapsible": 1,
+   "depends_on": "eval:!doc.__islocal",
    "fieldname": "contact_info",
    "fieldtype": "Section Break",
    "label": "Address & Contact",
@@ -300,6 +328,7 @@
    "collapsible": 1,
    "fieldname": "more_info",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "More Information",
    "oldfieldtype": "Section Break",
    "options": "fa fa-file-text"
@@ -334,7 +363,7 @@
    "label": "Request Type",
    "oldfieldname": "request_type",
    "oldfieldtype": "Select",
-   "options": "\nProduct Enquiry\nRequest for Information\nSuggestions\nOther"
+   "options": "\nProduct New Enquiry\nRequest for Information\nSuggestions\nOther"
   },
   {
    "fieldname": "column_break3",
@@ -362,12 +391,143 @@
    "fieldname": "blog_subscriber",
    "fieldtype": "Check",
    "label": "Blog Subscriber"
+  },
+  {
+   "fieldname": "personal_details_section",
+   "fieldtype": "Section Break",
+   "label": "Personal Details"
+  },
+  {
+   "fieldname": "age",
+   "fieldtype": "Select",
+   "label": "Age",
+   "options": "\nLess than 15\n15-20\n20-25\n25-35\n35-50\nMore than 50",
+   "reqd": 1
+  },
+  {
+   "fieldname": "weight",
+   "fieldtype": "Select",
+   "label": "Weight",
+   "options": "\nLess than 50\n50-60\n60-70\n70-80\n80-90\n90-100\nMore than 100",
+   "reqd": 1
+  },
+  {
+   "fieldname": "height",
+   "fieldtype": "Select",
+   "label": "Height",
+   "options": "\nLess than 5 feet\n5.0 - 5.5 feet\n5.6 - 6.0 feet\n6.1 - 6.5 feet\n6.6 - 7.0 feet\nMore than 7 feet",
+   "reqd": 1
+  },
+  {
+   "fieldname": "diseases",
+   "fieldtype": "Table MultiSelect",
+   "label": "Diseases",
+   "options": "Diseases TableMultiselect",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_21",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "query_category",
+   "fieldtype": "Select",
+   "label": "Query Category",
+   "options": "\nAppointment For Clinic"
+  },
+  {
+   "fieldname": "column_break_18",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.query_category==\"Appointment For Clinic\"",
+   "fieldname": "section_break_24",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "clinic_country",
+   "fieldtype": "Select",
+   "label": "Clinic Country",
+   "options": "\nIndia"
+  },
+  {
+   "fieldname": "clinic_state",
+   "fieldtype": "Select",
+   "label": "Clinic State",
+   "options": "\nPUNJAB"
+  },
+  {
+   "fieldname": "clinic_district",
+   "fieldtype": "Select",
+   "label": "Clinic District",
+   "options": "\nZIRAKPUR"
+  },
+  {
+   "fieldname": "column_break_26",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_28",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.query_category==\"Appointment For Clinic\"",
+   "fieldname": "clinic_details_section",
+   "fieldtype": "Section Break",
+   "label": "Clinic Details"
+  },
+  {
+   "fieldname": "clinic_name",
+   "fieldtype": "Data",
+   "label": "Clinic Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "clinic_address",
+   "fieldtype": "Text Editor",
+   "label": "Clinic Address",
+   "read_only": 1
+  },
+  {
+   "fieldname": "clinic",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Clinic",
+   "options": "Clinics"
+  },
+  {
+   "fieldname": "doctor_id",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Doctor ID",
+   "options": "User"
+  },
+  {
+   "fieldname": "doctor_name",
+   "fieldtype": "Data",
+   "label": "Doctor Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_33",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "clinic_map",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Clinic Map"
+  },
+  {
+   "fieldname": "schedule_date",
+   "fieldtype": "Datetime",
+   "label": "Schedule Date"
   }
  ],
  "icon": "fa fa-user",
  "idx": 5,
  "image_field": "image",
- "modified": "2020-10-21 11:54:08.372015",
+ "modified": "2021-02-21 23:13:34.432821",
  "modified_by": "Administrator",
  "module": "CRM",
  "name": "Lead",

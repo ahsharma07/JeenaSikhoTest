@@ -1,11 +1,10 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: GNU General Public License v3. See license.txt
-
 from __future__ import unicode_literals
 import frappe
 from frappe import realtime
 import json
-import js2py
+from frappe.core.doctype.sms_settings.sms_settings import send_sms
 from frappe import _
 from frappe.utils import (cstr, validate_email_address, cint, comma_and, has_gravatar, now, getdate, nowdate)
 from frappe.model.mapper import get_mapped_doc
@@ -15,6 +14,7 @@ from erpnext.controllers.selling_controller import SellingController
 from frappe.contacts.address_and_contact import load_address_and_contact
 from erpnext.accounts.party import set_taxes
 from frappe.email.inbox import link_communication_to_document
+from frappe.desk.form import assign_to
 
 sender_field = "email_id"
 
@@ -63,7 +63,31 @@ class Lead(SellingController):
 
 	def on_update(self):
 		self.add_calendar_event()
-
+		if self.query_category=="Appointment For Clinic":
+			self.create_appointment()
+			self.send_sms_for_appointment()
+	def send_sms_for_appointment(self):
+		receiver_list = []
+		receiver_list.append(self.phone)
+		if receiver_list:
+			message=f"Your Appointment is booked {self.clinic_address} at {getdate(self.schedule_date).strftime('%d-%m-%Y %H:%M:%S')}. For Navigation {self.clinic_map}  "
+			send_sms(receiver_list, cstr(message))
+	def create_appointment(self):
+		new_doc=frappe.new_doc("Appointment")
+		new_doc.customer_name=self.lead_name
+		new_doc.customer_phone_number=self.phone
+		new_doc.doctor = self.doctor_id
+		new_doc.doctor_name = self.doctor_name
+		new_doc.lead=self.name
+		new_doc.status="Open"
+		#new_doc.customer_details=self.diseases
+		new_doc.scheduled_time=self.schedule_date
+		new_doc.insert()
+		assign_to.add({
+			"assign_to": self.doctor_id,
+			"doctype": "Appointment",
+			"name": new_doc.name
+			})
 	def add_calendar_event(self, opts=None, force=False):
 		super(Lead, self).add_calendar_event({
 			"owner": self.lead_owner,
@@ -370,3 +394,4 @@ def create_popup():
 	frappe.msgprint("hello")
 	popup_content = frappe.render_template("erpnext/templates/lead_info.html", lead_fields)
 	frappe.publish_realtime(event="msgprint",message=popup_content, user="neha@extensioncrm.com")
+

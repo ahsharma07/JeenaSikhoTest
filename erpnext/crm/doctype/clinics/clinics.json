@@ -1,0 +1,165 @@
+{
+ "autoname": "JS-CLI.-.#####",
+ "creation": "2021-02-18 22:14:37.283788",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "clinic_name",
+  "doctor",
+  "doctor_name",
+  "type",
+  "pincode",
+  "longitude",
+  "latitudw",
+  "contact_mobile",
+  "contact_email",
+  "column_break_8",
+  "start_date",
+  "country",
+  "state",
+  "district",
+  "map",
+  "status",
+  "section_break_15",
+  "address"
+ ],
+ "fields": [
+  {
+   "bold": 1,
+   "fieldname": "clinic_name",
+   "fieldtype": "Data",
+   "label": "Clinic Name"
+  },
+  {
+   "bold": 1,
+   "fieldname": "type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Type",
+   "options": "\nClinic\nClinic & Panchkarma\nHospital"
+  },
+  {
+   "bold": 1,
+   "fieldname": "pincode",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Pincode"
+  },
+  {
+   "fieldname": "longitude",
+   "fieldtype": "Data",
+   "label": "Longitude"
+  },
+  {
+   "fieldname": "latitudw",
+   "fieldtype": "Data",
+   "label": "Latitude"
+  },
+  {
+   "bold": 1,
+   "fieldname": "contact_mobile",
+   "fieldtype": "Data",
+   "label": "Contact Mobile"
+  },
+  {
+   "bold": 1,
+   "fieldname": "contact_email",
+   "fieldtype": "Data",
+   "label": "Contact Email"
+  },
+  {
+   "bold": 1,
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Start Date"
+  },
+  {
+   "bold": 1,
+   "fieldname": "district",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "District"
+  },
+  {
+   "bold": 1,
+   "fieldname": "state",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "State"
+  },
+  {
+   "bold": 1,
+   "fieldname": "address",
+   "fieldtype": "Text Editor",
+   "label": "Address"
+  },
+  {
+   "bold": 1,
+   "fieldname": "country",
+   "fieldtype": "Select",
+   "label": "Country",
+   "options": "\nIndia"
+  },
+  {
+   "bold": 1,
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "\nActive\nInactive"
+  },
+  {
+   "fieldname": "map",
+   "fieldtype": "Data",
+   "label": "Map"
+  },
+  {
+   "fieldname": "column_break_8",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_15",
+   "fieldtype": "Section Break"
+  },
+  {
+   "bold": 1,
+   "fieldname": "doctor",
+   "fieldtype": "Link",
+   "label": "Doctor",
+   "options": "User"
+  },
+  {
+   "bold": 1,
+   "fetch_from": "doctor.full_name",
+   "fieldname": "doctor_name",
+   "fieldtype": "Data",
+   "label": "Doctor Name"
+  }
+ ],
+ "modified": "2021-02-20 14:38:08.537209",
+ "modified_by": "Administrator",
+ "module": "CRM",
+ "name": "Clinics",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "clinic_name",
+ "track_changes": 1
+}

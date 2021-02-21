@@ -48,6 +48,23 @@
   "query_category",
   "column_break_8",
   "query_type",
+  "column_break_44",
+  "based_on",
+  "location",
+  "clinic_country",
+  "column_break_46",
+  "clinic_state",
+  "column_break_48",
+  "clinic_district",
+  "clinics_details_section",
+  "clinic",
+  "clinic_name",
+  "doctor_name",
+  "scheduled_date_time",
+  "column_break_53",
+  "clinic_address",
+  "doctor_id",
+  "clinic_map",
   "section_break_4",
   "section_break_6",
   "items",
@@ -74,7 +91,8 @@
    "fieldname": "mobile_number",
    "fieldtype": "Data",
    "label": "Mobile Number",
-   "length": 10
+   "length": 10,
+   "reqd": 1
   },
   {
    "fetch_from": "pincode.state_name",
@@ -97,7 +115,8 @@
    "fieldname": "pincode",
    "fieldtype": "Link",
    "label": "Pincode",
-   "options": "Pincode Master"
+   "options": "Pincode Master",
+   "reqd": 1
   },
   {
    "fetch_from": "pincode.district_name",
@@ -119,7 +138,8 @@
    "bold": 1,
    "fieldname": "name1",
    "fieldtype": "Data",
-   "label": "Name"
+   "label": "Name",
+   "reqd": 1
   },
   {
    "fieldname": "gender",
@@ -136,16 +156,19 @@
   {
    "fieldname": "age",
    "fieldtype": "Data",
-   "label": "Age(Years)"
+   "label": "Age(Years)",
+   "reqd": 1
   },
   {
    "fieldname": "address",
    "fieldtype": "Small Text",
-   "label": "Address"
+   "label": "Address",
+   "reqd": 1
   },
   {
    "fieldname": "city",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "City"
   },
   {
@@ -162,17 +185,20 @@
   {
    "fieldname": "weight",
    "fieldtype": "Data",
-   "label": "Weight(KG)"
+   "label": "Weight(KG)",
+   "reqd": 1
   },
   {
    "fieldname": "height",
    "fieldtype": "Data",
-   "label": "Height(cms)"
+   "label": "Height",
+   "reqd": 1
   },
   {
    "fieldname": "diseases",
    "fieldtype": "Data",
-   "label": "Disease/Problem"
+   "label": "Disease/Problem",
+   "reqd": 1
   },
   {
    "fieldname": "operative_surgery_full_details_hospital_name",
@@ -339,7 +365,8 @@
   },
   {
    "fieldname": "section_break_51",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Lead History"
   },
   {
    "depends_on": "eval:doc.mobile_number",
@@ -347,7 +374,7 @@
    "fieldtype": "Section Break"
   },
   {
-   "depends_on": "eval: doc.query_category == \"General Query\";",
+   "depends_on": "eval: doc.query_category == \"General Query\" ;",
    "fieldname": "query_type",
    "fieldtype": "Select",
    "label": "Query Type",
@@ -356,7 +383,7 @@
   {
    "fieldname": "query_category",
    "fieldtype": "Select",
-   "label": "Query category",
+   "label": "Query Category",
    "options": "\nGeneral Query\nProduct Purchase\nAppointment for Clinic"
   },
   {
@@ -400,17 +427,122 @@
   },
   {
    "fieldname": "remarks",
-   "fieldtype": "Text Editor",
-   "label": "Remarks"
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Remarks",
+   "reqd": 1
   },
   {
    "fieldname": "section_break_57",
    "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "eval: doc.query_category==\"Appointment for Clinic\" || doc.based_on == \"Clinic Visit\" || doc.based_on == \"Address Enquiry\"",
+   "fieldname": "location",
+   "fieldtype": "Section Break",
+   "label": "Location & Address"
+  },
+  {
+   "bold": 1,
+   "fieldname": "clinic_country",
+   "fieldtype": "Select",
+   "label": "Country",
+   "options": "\nIndia"
+  },
+  {
+   "fieldname": "column_break_46",
+   "fieldtype": "Column Break"
+  },
+  {
+   "bold": 1,
+   "fieldname": "clinic_state",
+   "fieldtype": "Select",
+   "label": "State"
+  },
+  {
+   "fieldname": "column_break_48",
+   "fieldtype": "Column Break"
+  },
+  {
+   "bold": 1,
+   "fieldname": "clinic_district",
+   "fieldtype": "Select",
+   "label": "District"
+  },
+  {
+   "fieldname": "clinics_details_section",
+   "fieldtype": "Section Break",
+   "label": "Clinics Details"
+  },
+  {
+   "fieldname": "clinic",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Clinic",
+   "options": "Clinics",
+   "read_only": 1
+  },
+  {
+   "fieldname": "clinic_name",
+   "fieldtype": "Data",
+   "label": "Clinic Name",
+   "read_only": 1
+  },
+  {
+   "bold": 1,
+   "fieldname": "clinic_address",
+   "fieldtype": "Text Editor",
+   "label": "Clinic Address",
+   "read_only": 1
+  },
+  {
+   "bold": 1,
+   "fieldname": "clinic_map",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Clinic Map",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_53",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_44",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval: doc.query_type == \"Clinic Query\"",
+   "fieldname": "based_on",
+   "fieldtype": "Select",
+   "label": "Based On Query Type",
+   "options": "\nAddress Enquiry\nOther\nCallback Later"
+  },
+  {
+   "depends_on": "eval:doc.clinic_name;",
+   "fieldname": "scheduled_date_time",
+   "fieldtype": "Datetime",
+   "label": "Scheduled Date Time"
+  },
+  {
+   "bold": 1,
+   "fieldname": "doctor_name",
+   "fieldtype": "Data",
+   "label": "Doctor Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "doctor_id",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Doctor ID",
+   "options": "User",
+   "read_only": 1
   }
  ],
  "hide_toolbar": 1,
  "issingle": 1,
- "modified": "2021-02-12 12:34:59.482943",
+ "modified": "2021-02-21 21:01:16.063364",
  "modified_by": "Administrator",
  "module": "CRM",
  "name": "New Enquiry",
