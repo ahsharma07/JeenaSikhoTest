@@ -535,3 +535,4 @@ global_search_doctypes = {
 		{'doctype': 'Hotel Room Type', 'index': 4}
 	]
 }
+fixtures=["Custom Field","Custom Script","Print Format"]
