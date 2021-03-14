@@ -7,8 +7,11 @@
 			{% if is_new_lead %}
 				<span class="label label-info">New</span>
 			{% endif %}
+			{% if lead_status %}
+				<i class="fa fa-user" style="margin-right: 20px"></i>Lead Status:{{ lead_status }}</i></i>
+			{% endif %}
 		</h3>
 	</li>
-	<li><a href="/desk#Form/Lead/{{ name }}">View full info</a></li>
+	<li><a href="/desk#Form/Lead/{{ lead_name }}">View full info</a></li>
 </ul>
 <br><span class="small text-muted">Call ID: {{ call_id }} received at {{ call_timestamp }}</span>

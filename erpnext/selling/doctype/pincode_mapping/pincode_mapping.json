@@ -1,0 +1,64 @@
+{
+ "creation": "2021-03-02 15:06:14.974337",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "pincode",
+  "performance_percentage",
+  "eta_in_hrs",
+  "prepaid",
+  "cod"
+ ],
+ "fields": [
+  {
+   "bold": 1,
+   "fieldname": "pincode",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Pincode",
+   "options": "Pincode Master"
+  },
+  {
+   "bold": 1,
+   "fieldname": "performance_percentage",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Performance Percentage"
+  },
+  {
+   "bold": 1,
+   "fieldname": "eta_in_hrs",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "ETA in Hrs"
+  },
+  {
+   "bold": 1,
+   "fieldname": "prepaid",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Prepaid",
+   "options": "\nYES\nNO"
+  },
+  {
+   "bold": 1,
+   "fieldname": "cod",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "COD",
+   "options": "\nYES\nNO"
+  }
+ ],
+ "istable": 1,
+ "modified": "2021-03-02 15:30:20.613735",
+ "modified_by": "Administrator",
+ "module": "Selling",
+ "name": "Pincode Mapping",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

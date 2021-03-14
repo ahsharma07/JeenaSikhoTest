@@ -1,0 +1,79 @@
+{
+ "autoname": "field:company",
+ "creation": "2021-03-02 14:48:43.681258",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "company",
+  "status",
+  "column_break_3",
+  "mapping_for",
+  "column_break_5",
+  "mapping"
+ ],
+ "fields": [
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "unique": 1
+  },
+  {
+   "fieldname": "mapping",
+   "fieldtype": "Table",
+   "label": "Pincode Mapping",
+   "options": "Pincode Mapping"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Active\nIn-Active"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "mapping_for",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Mapping For",
+   "options": "\nClinic\nDealer\nWarehouse",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.mapping_for",
+   "fieldname": "column_break_5",
+   "fieldtype": "Section Break"
+  }
+ ],
+ "modified": "2021-03-05 14:22:53.208292",
+ "modified_by": "Administrator",
+ "module": "Selling",
+ "name": "Delivery Mapping",
+ "name_case": "UPPER CASE",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

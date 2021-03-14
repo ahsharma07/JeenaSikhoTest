@@ -113,8 +113,9 @@ class Customer(TransactionBase):
 	def update_lead_status(self):
 		'''If Customer created from Lead, update lead status to "Converted"
 		update Customer link in Quotation, Opportunity'''
-		if self.lead_name:
-			frappe.db.set_value('Lead', self.lead_name, 'status', 'Converted', update_modified=False)
+		pass
+		#if self.lead_name:
+			#frappe.db.set_value('Lead', self.lead_name, 'status', 'Converted', update_modified=False)
 
 	def create_lead_address_contact(self):
 		if self.lead_name:

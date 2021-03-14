@@ -15,5 +15,8 @@ def get_data():
 			{
 				'items': ['Opportunity',]
 			},
+			{
+				'items':['Sales Order']
+			},
 		]
 	}

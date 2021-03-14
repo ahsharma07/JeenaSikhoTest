@@ -2,13 +2,19 @@ frappe.listview_settings['Sales Order'] = {
 	add_fields: ["base_grand_total", "customer_name", "currency", "delivery_date",
 		"per_delivered", "per_billed", "status", "order_type", "name", "skip_delivery_note"],
 	get_indicator: function (doc) {
-		if (doc.status === "Closed") {
+		if (doc.status == "Address Verification") {
+			console.log(doc.status)
+		        //Address Verification
+                        return [__("Address Verification"), "green", "status,=,Address Verification"];
+                }
+                else if (doc.status === "Closed") {
 			// Closed
 			return [__("Closed"), "green", "status,=,Closed"];
 		} else if (doc.status === "On Hold") {
 			// on hold
 			return [__("On Hold"), "orange", "status,=,On Hold"];
 		} else if (doc.status === "Completed") {
+			console.log(doc.status)
 			return [__("Completed"), "green", "status,=,Completed"];
 		} else if (!doc.skip_delivery_note && flt(doc.per_delivered, 6) < 100) {
 			if (frappe.datetime.get_diff(doc.delivery_date) < 0) {

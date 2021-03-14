@@ -49,6 +49,7 @@
   "column_break_31",
   "grade",
   "branch",
+  "hr_manager",
   "attendance_and_leave_details",
   "leave_policy",
   "attendance_device_id",
@@ -777,12 +778,17 @@
    "fieldtype": "Link",
    "label": "Leave Approver",
    "options": "User"
+  },
+  {
+   "fieldname": "hr_manager",
+   "fieldtype": "Data",
+   "label": "HR Manager"
   }
  ],
  "icon": "fa fa-user",
  "idx": 24,
  "image_field": "image",
- "modified": "2020-01-09 04:23:55.611366",
+ "modified": "2021-03-08 10:10:23.122240",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee",

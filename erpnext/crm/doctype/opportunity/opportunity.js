@@ -77,14 +77,15 @@ frappe.ui.form.on("Opportunity", {
 
 		if(!doc.__islocal && doc.status!=="Lost") {
 			if(doc.with_items){
-				frm.add_custom_button(__('Supplier Quotation'),
-					function() {
-						frm.trigger("make_supplier_quotation")
-					}, __('Create'));
+				frm.add_custom_button(__('Sales Order'),function(){frm.trigger("make_sales_order")},__('Create'));
+				//frm.add_custom_button(__('Supplier Quotation'),
+					//function() {
+						//frm.trigger("make_supplier_quotation")
+					//}, __('Create'));
 			}
 
-			frm.add_custom_button(__('Quotation'),
-				cur_frm.cscript.create_quotation, __('Create'));
+			//frm.add_custom_button(__('Quotation'),
+				//cur_frm.cscript.create_quotation, __('Create'));
 
 			if(doc.status!=="Quotation") {
 				frm.add_custom_button(__('Lost'), () => {
@@ -128,6 +129,12 @@ frappe.ui.form.on("Opportunity", {
 		frappe.model.open_mapped_doc({
 			method: "erpnext.crm.doctype.opportunity.opportunity.make_supplier_quotation",
 			frm: cur_frm
+		})
+	},
+	make_sales_order:function(frm){
+		frappe.model.open_mapped_doc({
+			method:"erpnext.crm.doctype.opportunity.opportunity.make_sales_order",
+			frm:cur_frm
 		})
 	},
 

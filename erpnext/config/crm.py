@@ -7,18 +7,18 @@ def get_data():
 			"label": _("Sales Pipeline"),
 			"icon": "fa fa-star",
 			"items": [
-				{
-					"type":"doctype",
-					"name":"New Enquiry",
-					"description":_(""),
-					"onboard":1,
-				},
-				{
-                                        "type":"doctype",
-                                        "name":"Enquiry",
-                                        "description":_("Enquiry Logs"),
-                                        "onboard":1,
-                                },
+				#{
+				#	"type":"doctype",
+				#	"name":"New Enquiry",
+				#	"description":_(""),
+				#	"onboard":1,
+				#},
+				#{
+                                #        "type":"doctype",
+                                #        "name":"Enquiry",
+                                #        "description":_("Enquiry Logs"),
+                                #        "onboard":1,
+                                #},
 				{
 					"type": "doctype",
 					"name": "Lead",

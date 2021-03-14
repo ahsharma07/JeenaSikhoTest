@@ -103,30 +103,31 @@ class Appointment(Document):
 		self.lead = lead.name
 
 	def auto_assign(self):
-		from frappe.desk.form.assign_to import add as add_assignemnt
-		existing_assignee = self.get_assignee_from_latest_opportunity()
-		if existing_assignee:
+		pass
+	#	from frappe.desk.form.assign_to import add as add_assignemnt
+	#	existing_assignee = self.get_assignee_from_latest_opportunity()
+		#if existing_assignee:
 			# If the latest opportunity is assigned to someone
 			# Assign the appointment to the same
-			add_assignemnt({
-				'doctype': self.doctype,
-				'name': self.name,
-				'assign_to': existing_assignee
-			})
-			return
-		if self._assign:
-			return
-		available_agents = _get_agents_sorted_by_asc_workload(
-			getdate(self.scheduled_time))
-		for agent in available_agents:
-			if(_check_agent_availability(agent, self.scheduled_time)):
-				agent = agent[0]
-				add_assignemnt({
-					'doctype': self.doctype,
-					'name': self.name,
-					'assign_to': agent
-				})
-			break
+	#		add_assignemnt({
+	#			'doctype': self.doctype,
+	#			'name': self.name,
+	#			'assign_to': existing_assignee
+	#		})
+	#		return
+	#	if self._assign:
+	#		return
+	#	available_agents = _get_agents_sorted_by_asc_workload(
+	#		getdate(self.scheduled_time))
+	#	for agent in available_agents:
+	#		if(_check_agent_availability(agent, self.scheduled_time)):
+	#			agent = agent[0]
+	#			add_assignemnt({
+	#				'doctype': self.doctype,
+	#				'name': self.name,
+	#				'assign_to': agent
+	#			})
+	#		break
 
 	def get_assignee_from_latest_opportunity(self):
 		if not self.lead:

@@ -54,7 +54,10 @@ class JobOffer(Document):
 		selected_applicant = frappe.db.get_value("Job Requisition Form", self.job_requisition_form, "total_selected_applicant")
 		required_employee = frappe.db.get_value("Job Requisition Form", self.job_requisition_form, "no_of_required_emp")
 		if self.status == "Accepted":
-			selected_applicant += 1
+			if selected_applicant:
+				selected_applicant += 1
+			else:
+				selected_applicant=1
 			frappe.set_value("Job Requisition Form", self.job_requisition_form, "total_selected_applicant", selected_applicant)
 		elif self.status == "Rejected" and not selected_applicant == 0:
 			selected_applicant -= 1
@@ -69,7 +72,10 @@ class JobOffer(Document):
 
 		selected_applicant = frappe.db.get_value("Training Batch", self.training_batch, "enrolled_applicants")
 		if self.status == "Accepted":
-			selected_applicant += 1
+			if selected_applicant:
+				selected_applicant += 1
+			else:
+				selected_applicant = 1
 			frappe.set_value("Training Batch", self.training_batch, "enrolled_applicants", selected_applicant)
 		elif self.status == "Rejected" and not selected_applicant == 0:
 			selected_applicant -= 1
@@ -128,7 +134,11 @@ def make_employee(source_name, target_doc=None):
 					"offer_date": "date_of_joining",
 					"gender":"gender",
 					"date_of_birth":"date_of_birth",
-					"training_batch":"training_batch"
+					"training_batch":"training_batch",
+					"referred_by":"referred_employee",
+					"referred_by_name":"referred_employee_name",
+					"offer_date":"final_confirmation_date",
+					"emergency_no":"emergency_phone_number"
 				}}
 		}, target_doc, set_missing_values)
 	return doc

@@ -13,6 +13,12 @@ def get_data():
 					"dependencies": ["Item"],
 				},
 				{
+                                        "type": "doctype",
+                                        "name": "Delivery Mapping",
+                                        "onboard": 1,
+                                        "dependencies": ["Item"],
+                                },
+				{
 					"type": "doctype",
 					"name": "Delivery Note",
 					"onboard": 1,

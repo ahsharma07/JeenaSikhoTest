@@ -1,7 +1,7 @@
 {
  "allow_import": 1,
  "allow_rename": 1,
- "autoname": "naming_series:",
+ "autoname": "JS-OPP-.######.",
  "creation": "2013-03-07 18:50:30",
  "description": "Potential Sales Deal",
  "doctype": "DocType",
@@ -22,6 +22,35 @@
   "sales_stage",
   "order_lost_reason",
   "mins_to_first_response",
+  "source",
+  "customer_query_section",
+  "query_category",
+  "product",
+  "product_description",
+  "with_items",
+  "column_break_29",
+  "section_break_28",
+  "clinic_country",
+  "column_break_30",
+  "clinic_state",
+  "column_break_32",
+  "clinic_district",
+  "clinic_details_section",
+  "clinic",
+  "clinic_name",
+  "clinic_map",
+  "doctor_name",
+  "schedule_date",
+  "column_break_39",
+  "clinic_address",
+  "doctor_id",
+  "items_section",
+  "items",
+  "section_break_38",
+  "total",
+  "discount_amount",
+  "column_break_41",
+  "remarks",
   "next_contact",
   "contact_by",
   "contact_date",
@@ -30,11 +59,8 @@
   "section_break_14",
   "currency",
   "opportunity_amount",
-  "with_items",
   "column_break_17",
   "probability",
-  "items_section",
-  "items",
   "contact_info",
   "customer_address",
   "address_display",
@@ -46,7 +72,6 @@
   "contact_email",
   "contact_mobile",
   "more_info",
-  "source",
   "campaign",
   "column_break1",
   "company",
@@ -68,7 +93,7 @@
    "no_copy": 1,
    "oldfieldname": "naming_series",
    "oldfieldtype": "Select",
-   "options": "CRM-OPP-.YYYY.-",
+   "options": "JS-OPP-",
    "reqd": 1,
    "set_only_once": 1
   },
@@ -118,14 +143,14 @@
    "no_copy": 1
   },
   {
-   "default": "Sales",
    "fieldname": "opportunity_type",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Opportunity Type",
    "oldfieldname": "enquiry_type",
    "oldfieldtype": "Select",
-   "options": "Opportunity Type"
+   "options": "Opportunity Type",
+   "reqd": 1
   },
   {
    "default": "Open",
@@ -137,7 +162,7 @@
    "no_copy": 1,
    "oldfieldname": "status",
    "oldfieldtype": "Select",
-   "options": "Open\nQuotation\nConverted\nLost\nReplied\nClosed",
+   "options": "Open\nWon\nClosed",
    "print_hide": 1,
    "reqd": 1
   },
@@ -153,12 +178,11 @@
    "bold": 1,
    "fieldname": "mins_to_first_response",
    "fieldtype": "Float",
+   "hidden": 1,
    "label": "Mins to first response",
    "read_only": 1
   },
   {
-   "collapsible": 1,
-   "collapsible_depends_on": "contact_by",
    "fieldname": "next_contact",
    "fieldtype": "Section Break",
    "label": "Follow Up"
@@ -195,6 +219,7 @@
    "oldfieldtype": "Small Text"
   },
   {
+   "collapsible": 1,
    "fieldname": "section_break_14",
    "fieldtype": "Section Break",
    "label": "Sales"
@@ -212,19 +237,21 @@
    "options": "currency"
   },
   {
+   "bold": 1,
    "default": "0",
+   "depends_on": "eval:doc.query_category==\"Product Query\"",
+   "description": "<h2>Interested to buy product</h2>",
    "fieldname": "with_items",
-   "fieldtype": "Check",
-   "label": "With Items"
+   "fieldtype": "Check"
   },
   {
    "fieldname": "column_break_17",
    "fieldtype": "Column Break"
   },
   {
-   "default": "Prospecting",
    "fieldname": "sales_stage",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Sales Stage",
    "options": "Sales Stage"
   },
@@ -339,12 +366,14 @@
    "options": "fa fa-file-text"
   },
   {
+   "bold": 1,
    "fieldname": "source",
    "fieldtype": "Link",
    "label": "Source",
    "oldfieldname": "source",
    "oldfieldtype": "Select",
-   "options": "Lead Source"
+   "options": "Lead Source",
+   "read_only": 1
   },
   {
    "depends_on": "eval: doc.source==\"Campaign\"",
@@ -407,13 +436,157 @@
   {
    "fieldname": "converted_by",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Converted By",
    "options": "User"
+  },
+  {
+   "fieldname": "total",
+   "fieldtype": "Currency",
+   "label": "Total",
+   "options": "currency"
+  },
+  {
+   "depends_on": "eval:doc.opportunity_type == \"Sales\"",
+   "fieldname": "customer_query_section",
+   "fieldtype": "Section Break",
+   "label": "Customer Query"
+  },
+  {
+   "fieldname": "query_category",
+   "fieldtype": "Select",
+   "label": "Query Category",
+   "options": "\nClinical Query\nProduct Query"
+  },
+  {
+   "depends_on": "eval:doc.query_category==\"Clinical Query\"",
+   "fieldname": "section_break_28",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "clinic_country",
+   "fieldtype": "Select",
+   "label": "Clinic Country",
+   "options": "\nIndia"
+  },
+  {
+   "fieldname": "column_break_30",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "clinic_state",
+   "fieldtype": "Select",
+   "label": "Clinic State"
+  },
+  {
+   "fieldname": "column_break_32",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "clinic_district",
+   "fieldtype": "Select",
+   "label": "Clinic District"
+  },
+  {
+   "depends_on": "eval:doc.clinic_district && doc.query_category == \"Clinical Query\"",
+   "fieldname": "clinic_details_section",
+   "fieldtype": "Section Break",
+   "label": "Clinic Details"
+  },
+  {
+   "bold": 1,
+   "fieldname": "clinic",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Clinic",
+   "options": "Clinics",
+   "read_only": 1
+  },
+  {
+   "bold": 1,
+   "fieldname": "clinic_name",
+   "fieldtype": "Data",
+   "label": "Clinic Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "clinic_map",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Clinic Map"
+  },
+  {
+   "bold": 1,
+   "fieldname": "doctor_name",
+   "fieldtype": "Data",
+   "label": "Doctor Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_39",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "clinic_address",
+   "fieldtype": "Text Editor",
+   "label": "Clinic Address",
+   "read_only": 1
+  },
+  {
+   "fieldname": "doctor_id",
+   "fieldtype": "Link",
+   "label": "Doctor ID",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "bold": 1,
+   "fieldname": "schedule_date",
+   "fieldtype": "Datetime",
+   "label": "Schedule Date"
+  },
+  {
+   "depends_on": "eval:doc.query_category==\"Product Query\"",
+   "fieldname": "product",
+   "fieldtype": "Link",
+   "label": "Need to Know about our Product",
+   "options": "Item"
+  },
+  {
+   "fetch_from": "product.product_details",
+   "fieldname": "product_description",
+   "fieldtype": "Text Editor",
+   "hidden": 1,
+   "label": "Product Description"
+  },
+  {
+   "fieldname": "column_break_29",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "discount_amount",
+   "fieldtype": "Float",
+   "label": "Discount Amount"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Select",
+   "label": "Remarks",
+   "options": "\nNeed Discount"
+  },
+  {
+   "depends_on": "with_items",
+   "fieldname": "section_break_38",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_41",
+   "fieldtype": "Column Break"
   }
  ],
  "icon": "fa fa-info-sign",
  "idx": 195,
- "modified": "2020-08-12 23:34:39.665513",
+ "modified": "2021-03-04 16:37:31.530502",
  "modified_by": "Administrator",
  "module": "CRM",
  "name": "Opportunity",

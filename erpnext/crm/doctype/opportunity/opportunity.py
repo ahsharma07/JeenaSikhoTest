@@ -3,13 +3,15 @@
 
 from __future__ import unicode_literals
 import frappe, json
-from frappe.utils import cstr, cint, get_fullname
+from frappe.utils import cstr, cint, get_fullname,getdate
 from frappe import msgprint, _
+from frappe.desk.form import assign_to
 from frappe.model.mapper import get_mapped_doc
 from erpnext.setup.utils import get_exchange_rate
 from erpnext.utilities.transaction_base import TransactionBase
 from erpnext.accounts.party import get_party_account_currency
 from frappe.email.inbox import link_communication_to_document
+from frappe.core.doctype.sms_settings.sms_settings import send_sms
 
 subject_field = "title"
 sender_field = "contact_email"
@@ -38,6 +40,13 @@ class Opportunity(TransactionBase):
 
 		if not self.with_items:
 			self.items = []
+
+		#if self.contact_by:
+			#assign_to.add({
+        	         #       "assign_to": self.contact_by,
+                	  #      "doctype": self.doctype,
+                        #	"name": self.name
+			#	})
 
 	def make_new_lead_if_required(self):
 		"""Set lead against new opportunity"""
@@ -150,6 +159,39 @@ class Opportunity(TransactionBase):
 
 	def on_update(self):
 		self.add_calendar_event()
+		if self.query_category=="Clinical Query":
+			self.send_sms_for_appointment()
+
+	def send_sms_for_appointment(self):
+		receiver_list = []
+		receiver_list.append(frappe.db.get_value("Lead",self.party_name,"phone"))
+		if receiver_list:
+			if self.schedule_date:
+				address=self.clinic_address[12:]
+				address=address.replace("</strong></h1>","")
+				message=f"Your Appointment is booked {address} at {self.schedule_date}. For Navigation {self.clinic_map}  "
+				self.create_appointment()
+			else:
+				 message=f"Clinic Address is  {address} . For Navigation {self.clinic_map}  "
+			send_sms(receiver_list, cstr(message))
+	def create_appointment(self):
+		new_doc=frappe.new_doc("Appointment")
+		new_doc.customer_name=self.party_name
+		new_doc.customer_phone_number=frappe.db.get_value("Lead",self.party_name,"phone")
+		new_doc.doctor = self.doctor_id
+		new_doc.doctor_name = self.doctor_name
+		new_doc.lead=self.party_name
+		new_doc.status="Open"
+                #new_doc.customer_details=self.diseases
+		new_doc.scheduled_time=self.schedule_date
+		new_doc.insert()
+		assign_to.add({
+                        "assign_to": self.doctor_id,
+                        "doctype": "Appointment",
+                        "name": new_doc.name
+                        })
+		frappe.db.set_value("Opportunity",self.name,"status", "Won")
+		frappe.db.set_value("Lead",self.party_name,"status","Appointment Scheduled")
 
 	def add_calendar_event(self, opts=None, force=False):
 		if not opts:
@@ -341,3 +383,35 @@ def make_opportunity_from_communication(communication, company, ignore_communica
 	link_communication_to_document(doc, "Opportunity", opportunity.name, ignore_communication_links)
 
 	return opportunity.name
+
+@frappe.whitelist()
+def make_sales_order(source_name, target_doc=None):
+	doclist = get_mapped_doc("Opportunity", source_name, {
+			"Opportunity": {
+				"doctype": "Sales Order",
+				"field_map":{
+					"customer_name":"customer",
+					"party_name":"lead"
+					}
+			},
+			"Opportunity Item": {
+				"doctype": "Sales Order Item",
+				"field_map": {
+					"parent": "prevdoc_docname"
+				},
+			},
+			"Sales Taxes and Charges": {
+				"doctype": "Sales Taxes and Charges",
+				"add_if_empty": True
+			},
+			"Sales Team": {
+				"doctype": "Sales Team",
+				"add_if_empty": True
+			},
+			"Payment Schedule": {
+				"doctype": "Payment Schedule",
+				"add_if_empty": True
+			}
+		}, target_doc)
+
+	return doclist

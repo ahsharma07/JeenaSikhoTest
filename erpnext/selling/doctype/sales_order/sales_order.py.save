@@ -57,20 +57,14 @@ class SalesOrder(SellingController):
 
 		if not self.billing_status: self.billing_status = 'Not Billed'
 		if not self.delivery_status: self.delivery_status = 'Not Delivered'
-		if self.status == "Draft":
-			self.status = "On Hold"
 		if self.delivery_pincode:
 			self.set_delivery()
 
 
 	def set_delivery(self):
-		frappe.msgprint(str(self.delivery_pincode))
-		data=frappe.db.sql("""select dm.name,pm.performance_percentage,pm.eta_in_hrs from `tabPincode Mapping` as pm ,`tabDelivery Mapping` as dm where pm.pincode = %s and dm.name = pm.parent and pm.prepaid = "YES" and pm.cod = "NO" order by  pm.performance_percentage DESC,pm.eta_in_hrs ASC ;""",(self.delivery_pincode),as_dict = 1)
-		frappe.msgprint(str(data))
-		frappe.msgprint(str(data[0]['name']))
-		self.delivery_by = data[0]['name']
-		self.eta_in_hrs = data[0]['eta_in_hrs']
-		self.performance_percentage = data[0]['performance_percentage']
+		
+                data=frappe.db.sql("""select name,clinic_name,address,map,doctor,doctor_name from `tabClinics` where state=%s and district = %s and country = %s""",(state,district,country),as_dict$
+                return data
 	def validate_po(self):
 		# validate p.o date v/s delivery date
 		if self.po_date and not self.skip_delivery_note:
@@ -106,7 +100,7 @@ class SalesOrder(SellingController):
 	def validate_sales_mntc_quotation(self):
 		for d in self.get('items'):
 			if d.prevdoc_docname:
-				res = frappe.db.sql("select name from `tabOpportunity` where name=%s and opportunity_type = %s",
+				res = frappe.db.sql("select name from `tabQuotation` where name=%s and order_type = %s",
 					(d.prevdoc_docname, self.order_type))
 				if not res:
 					frappe.msgprint(_("Quotation {0} not of type {1}")
@@ -152,15 +146,11 @@ class SalesOrder(SellingController):
 
 	def validate_with_previous_doc(self):
 		super(SalesOrder, self).validate_with_previous_doc({
-			"Opportunity": {
+			"Quotation": {
 				"ref_dn_field": "prevdoc_docname",
 				"compare_fields": [["company", "="]]
 			}
 		})
-		for quotation in list(set([d.prevdoc_docname for d in self.get("items")])):
-			if quotation:
-				frappe.db.set_value("Opportunity",quotation,"status","Won")
-				frappe.db.set_value("Lead",self.lead,"status","Awaiting for AV")
 
 
 	def update_enquiry_status(self, prevdoc, flag):
@@ -171,15 +161,12 @@ class SalesOrder(SellingController):
 	def update_prevdoc_status(self, flag):
 		for quotation in list(set([d.prevdoc_docname for d in self.get("items")])):
 			if quotation:
-				pass
-				#doc = frappe.get_doc("Opportunity", quotation)
-				frappe.db.set_value("Opportunity",quotation,"status","Won")
-				frappe.db.set_value("Lead",self.lead,"status","Awaiting for AV")
-				#if doc.docstatus==2:
-				#	frappe.throw(_("Opportunity {0} is cancelled").format(quotation))
+				doc = frappe.get_doc("Quotation", quotation)
+				if doc.docstatus==2:
+					frappe.throw(_("Quotation {0} is cancelled").format(quotation))
 
-				#doc.set_status(update=True)
-				#doc.update_opportunity()
+				doc.set_status(update=True)
+				doc.update_opportunity()
 
 	def validate_drop_ship(self):
 		for d in self.get('items'):

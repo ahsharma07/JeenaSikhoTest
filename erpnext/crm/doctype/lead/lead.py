@@ -38,7 +38,7 @@ class Lead(SellingController):
 				(not cint(self.get("__islocal"))) else None,
 		})
 
-		self.set_status()
+#		self.set_status()
 		self.check_email_id_is_unique()
 
 		if self.email_id:
@@ -60,12 +60,32 @@ class Lead(SellingController):
 		if (self.ends_on and self.contact_date and
 			(getdate(self.ends_on) < getdate(self.contact_date))):
 			frappe.throw(_("Ends On date cannot be before Next Contact Date."))
+		if self.contact_by:
+			assign_to.add({
+                                "assign_to": self.contact_by,
+                                "doctype": self.doctype,
+                                "name": self.name
+				})
 
 	def on_update(self):
 		self.add_calendar_event()
+		customer = frappe.db.sql("""select name from `tabCustomer`
+			where lead_name=%s """, (self.name),as_dict=1)
+		if not customer and self.lead_name:
+			customer = frappe.new_doc("Customer")
+			customer.customer_name = self.lead_name
+#                       customer.salutation = self.
+			customer.customer_type = "Individual"
+			customer.customer_group = "Individual"
+			customer.lead_name = self.name
+			customer.mobile_no = self.phone
+			customer.email_id = self.email_id
+			customer.save()
+
 		if self.query_category=="Appointment For Clinic":
 			self.create_appointment()
 			self.send_sms_for_appointment()
+			frappe.db.set_value("Lead",self.name,"query_category","")
 	def send_sms_for_appointment(self):
 		receiver_list = []
 		receiver_list.append(self.phone)
@@ -88,6 +108,7 @@ class Lead(SellingController):
 			"doctype": "Appointment",
 			"name": new_doc.name
 			})
+		frappe.db.set_value("Lead",self.name,"status", "Appointment Scheduled")
 	def add_calendar_event(self, opts=None, force=False):
 		super(Lead, self).add_calendar_event({
 			"owner": self.lead_owner,

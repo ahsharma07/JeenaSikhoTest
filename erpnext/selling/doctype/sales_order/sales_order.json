@@ -12,6 +12,7 @@
   "title",
   "abbr",
   "naming_series",
+  "lead",
   "customer",
   "customer_name",
   "order_type",
@@ -27,6 +28,7 @@
   "contact_info",
   "customer_address",
   "address_display",
+  "delivery_pincode",
   "contact_person",
   "contact_display",
   "contact_phone",
@@ -47,6 +49,11 @@
   "price_list_currency",
   "plc_conversion_rate",
   "ignore_pricing_rule",
+  "sb1",
+  "delivery_by",
+  "eta_in_hrs",
+  "cb1",
+  "performance_percentage",
   "sec_warehouse",
   "set_warehouse",
   "items_section",
@@ -1009,7 +1016,6 @@
    "width": "50%"
   },
   {
-   "default": "Draft",
    "fieldname": "status",
    "fieldtype": "Select",
    "in_list_view": 1,
@@ -1017,7 +1023,7 @@
    "no_copy": 1,
    "oldfieldname": "status",
    "oldfieldtype": "Select",
-   "options": "\nDraft\nOn Hold\nTo Deliver and Bill\nTo Bill\nTo Deliver\nCompleted\nCancelled\nClosed",
+   "options": "Address Verification\nOn Hold\nTo Deliver and Bill\nTo Bill\nTo Deliver\nCompleted\nCancelled\nClosed",
    "print_hide": 1,
    "read_only": 1,
    "reqd": 1,
@@ -1200,12 +1206,52 @@
    "hidden": 1,
    "label": "Abbr",
    "read_only": 1
+  },
+  {
+   "fieldname": "lead",
+   "fieldtype": "Link",
+   "label": "Lead",
+   "options": "Lead"
+  },
+  {
+   "fetch_from": "customer_address.pincode",
+   "fieldname": "delivery_pincode",
+   "fieldtype": "Link",
+   "label": "Delivery Pincode",
+   "options": "Pincode Master"
+  },
+  {
+   "fieldname": "sb1",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "delivery_by",
+   "fieldtype": "Link",
+   "label": "Delivery By",
+   "options": "Delivery Mapping",
+   "read_only": 1
+  },
+  {
+   "fieldname": "eta_in_hrs",
+   "fieldtype": "Float",
+   "label": "ETA in Hrs",
+   "read_only": 1
+  },
+  {
+   "fieldname": "performance_percentage",
+   "fieldtype": "Data",
+   "label": "Performance Percentage",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cb1",
+   "fieldtype": "Column Break"
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 105,
  "is_submittable": 1,
- "modified": "2020-11-03 13:49:21.416392",
+ "modified": "2021-03-03 17:16:31.026912",
  "modified_by": "Administrator",
  "module": "Selling",
  "name": "Sales Order",
