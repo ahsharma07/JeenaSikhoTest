@@ -10,6 +10,7 @@
   "column_break_3",
   "mapping_for",
   "column_break_5",
+  "product_mapping",
   "mapping"
  ],
  "fields": [
@@ -40,20 +41,27 @@
   },
   {
    "fieldname": "mapping_for",
-   "fieldtype": "Select",
+   "fieldtype": "Link",
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Mapping For",
-   "options": "\nClinic\nDealer\nWarehouse",
+   "options": "Service Provider",
    "reqd": 1
   },
   {
    "depends_on": "eval:doc.mapping_for",
    "fieldname": "column_break_5",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Mapping"
+  },
+  {
+   "fieldname": "product_mapping",
+   "fieldtype": "Table",
+   "label": "Product Mapping",
+   "options": "Product Mapping"
   }
  ],
- "modified": "2021-03-05 14:22:53.208292",
+ "modified": "2021-03-19 18:20:20.280474",
  "modified_by": "Administrator",
  "module": "Selling",
  "name": "Delivery Mapping",

@@ -1,0 +1,38 @@
+{
+ "add_total_row": 0,
+ "creation": "2021-03-18 13:06:59.953025",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "idx": 0,
+ "is_standard": "Yes",
+ "letter_head": "jeena sikho",
+ "modified": "2021-03-19 16:35:38.413778",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "New Attendance",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "query": "SELECT\nCAST(CheckIn.time AS DATE) as \"Date:Date:150\",\nCAST(CheckIn.time AS TIME) as \"InTime:Time:150\",\nCAST(CheckOut.time AS TIME) as \"OutTime:Time:150\"\nFROM\n(SELECT * FROM `tabEmployee Checkin` WHERE `tabEmployee Checkin`.log_type='IN') AS CheckIn\nLEFT JOIN\n(SELECT * FROM `tabEmployee Checkin` WHERE `tabEmployee Checkin`.log_type='OUT') AS CheckOut\nON\nCheckIn.time = CheckOut.time\nUNION\nCheckIn\nRIGHT JOIN\nCheckOut\nON\nCheckIn.time = CheckOut.time",
+ "ref_doctype": "Employee Checkin",
+ "report_name": "New Attendance",
+ "report_type": "Query Report",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "Employee"
+  },
+  {
+   "role": "HR Manager"
+  },
+  {
+   "role": "HR User"
+  },
+  {
+   "role": "Web Checkin"
+  }
+ ]
+}

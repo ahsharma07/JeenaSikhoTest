@@ -15,10 +15,12 @@ def execute(filters=None):
 	ss_earning_map = get_ss_earning_map(salary_slips)
 	ss_ded_map = get_ss_ded_map(salary_slips)
 	doj_map = get_employee_doj_map()
+	frappe.msgprint(str(doj_map))
 
 	data = []
 	for ss in salary_slips:
-		row = [ss.name, ss.employee, ss.employee_name, doj_map.get(ss.employee), ss.branch, ss.department, ss.designation,
+		esic = frappe.db.get_value("Employee",ss.employee,"training_batch")
+		row = [ss.name, ss.employee, ss.employee_name, doj_map.get(ss.employee), esic,ss.branch, ss.department, ss.designation,
 			ss.company, ss.start_date, ss.end_date, ss.leave_without_pay, ss.payment_days]
 
 		if not ss.branch == None:columns[3] = columns[3].replace('-1','120')
@@ -54,7 +56,7 @@ def get_columns(salary_slips):
 	"""
 	columns = [
 		_("Salary Slip ID") + ":Link/Salary Slip:150",_("Employee") + ":Link/Employee:120", _("Employee Name") + "::140",
-		_("Date of Joining") + "::80", _("Branch") + ":Link/Branch:-1", _("Department") + ":Link/Department:-1",
+		_("Date of Joining") + "::80", _("ESIC Number") + "::80",_("Branch") + ":Link/Branch:-1", _("Department") + ":Link/Department:-1",
 		_("Designation") + ":Link/Designation:-1", _("Company") + ":Link/Company:120", _("Start Date") + "::80",
 		_("End Date") + "::80", _("Leave Without Pay") + ":Float:-1", _("Payment Days") + ":Float:120"
 	]

@@ -1,0 +1,39 @@
+# Copyright (c) 2013, Frappe Technologies Pvt. Ltd. and contributors
+# For license information, please see license.txt
+
+from __future__ import unicode_literals
+# import frappe
+import frappe
+from frappe import _
+
+def execute(filters=None):
+	columns, data = [], []
+	columns=get_columns()
+	data=get_data()
+	return columns, data
+def get_columns():
+	return [
+                {"label": _("Employee code"), "fieldname": "employee", "fieldtype": "Link", "width": 140},
+                {"label": _("Date"), "fieldname":"time", "fieldtype":"Date","width": 100},
+                {"label": _("Log-In Time"), "fieldname": "time","fieldtype":"time", "width": 200},
+                {"label": _("Log-out Time"), "fieldname": "time","fieldtype":"time", "width": 100},
+                {"label": _("Total hours"), "fieldname": "time",  "width": 100},
+                {"label": _("Day"), "fieldname": "time", "fieldtype": "Day",  "width": 120},
+                {"label": _("Shift"), "fieldname": "shift","Item", "width": 100},
+                {"label": _("PORTION"), "fieldname": "portion",  "width": 100},
+                {"label": _("OT hours"), "fieldname": "OT",  "width": 100},
+                ]
+
+def get_data():
+	all_data=frappe.db.sql(''' ''',as_dict=1 )
+	for data in all_data:
+		if "IGST" in data.account_head:
+			data['igst']=data['account_head']
+			data['igst_amount']=data['tax_amount']
+		elif "CGST" in data.account_head:
+			data['cgst']=data['account_head']
+			data['cgst_amount']=data['tax_amount']
+		elif "SGST" in data.account_head:
+			data['sgst']=data['account_head']
+			data['sgst_amount']=data['tax_amount']
+	return all_data
