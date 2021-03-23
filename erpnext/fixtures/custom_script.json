@@ -174,5 +174,16 @@
   "parentfield": null,
   "parenttype": null,
   "script": "frappe.ui.form.on('Sales Order', {\n\tvalidate(frm) {\n\t    console.log(frm.doc.status)\n\t\tif (frm.doc.status == \"Draft\"){\n\t\t      cur_frm.set_value(\"status\",\"Address Verification\")\n\t\t      cur_frm.refresh_field(\"status\")\n\t\t}\n\t}\n})"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Custom Script",
+  "dt": "Delivery Mapping",
+  "modified": "2021-03-19 18:19:27.656524",
+  "name": "Delivery Mapping-Client",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "script": "frappe.ui.form.on('Delivery Mapping', {\n\trefresh(frm){\n            frm.add_custom_button(__(\"Get Items\"), function(){\n                frappe.call({\n        method: 'erpnext.selling.doctype.delivery_mapping.delivery_mapping.get_all_item',\n        args: {'doc':frm.doc.name,'service_provider_type':frm.doc.mapping_for},\n        callback: function(r){\n\t\t\t    if(r.message){\n\t\t            console.log(r.message)\n\t\t            let message_body = r.message;\n\t\t            frm.doc.product_mapping = []\n\t\t\t        for (var i in message_body){\n\t\t\t            frm.add_child(\"product_mapping\");\n\t\t\t            frm.fields_dict.product_mapping.get_value()[i].item_code = message_body[i].item_code;\n\t\t\t            frm.fields_dict.product_mapping.get_value()[i].item_name = message_body[i].item_name;\n\t\t\t            frm.fields_dict.product_mapping.get_value()[i].item_group = message_body[i].item_group;\n\t\t\t        }\n\t\t\t        frm.refresh();\n\t\t\t    }\n        }\n                    \n                })\n                //frm.refresh_field(\"product_mapping\")\n            })\n    }\n})"
  }
 ]
