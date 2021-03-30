@@ -44,9 +44,12 @@ def incoming_call_handle(**kwargs):
 
 		call_log = get_call_log(call_payload)
 		if not call_log:
-			create_call_log(call_payload)
+			call_log=create_call_log(call_payload)
 		else:
-			update_call_log(call_payload, call_log=call_log)
+			call_log=update_call_log(call_payload, call_log=call_log)
+		if call_log:
+			kwargs['success']=True
+		return kwargs
 	else:
 		frappe.db.rollback()
 		frappe.log_error(title=_('Error in Handling incoming call'))
@@ -54,7 +57,10 @@ def incoming_call_handle(**kwargs):
 
 @frappe.whitelist(allow_guest=True)
 def handle_end_call(**kwargs):
-	update_call_log(kwargs, 'Completed')
+	call_log=update_call_log(kwargs, 'Completed')
+	if call_log:
+		kwargs['success']=True
+	return kwargs
 @frappe.whitelist()
 def get_call_log(call_payload):
 	call_log = frappe.get_all('Call Log', {
@@ -90,18 +96,6 @@ def update_call_log(call_payload, status='Ringing', call_log=None):
 		call_log.recording_url = call_payload.get('RecordingUrl')
 		call_log.save(ignore_permissions=True)
 		frappe.db.commit()
-		comm=frappe.new_doc("Communication")
-		comm.subject="IVR Call"
-		comm.type="Phone"
-		comm.status="Open"
-		comm.content="Call Started"
-		comm.communication_date=datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-		comm.reference_doctype="Lead"
-		lead=frappe.db.sql('''select * from `tabLead` where phone=%(mobile)s''',{"mobile":call_payload.get('phone')},as_dict=1)
-		if lead:
-			comm.reference_name=lead[0].name
-		comm.save(ignore_permissions=True)
-		frappe.db.commit()
 		return call_log
 @frappe.whitelist()
 def create_outgoing_popup(data):
@@ -127,7 +121,7 @@ def create_popup(mobile_no):
 			'lead_name':lead.name}
 	frappe.log_error(lead_fields,"lead")
 	popup_content = frappe.render_template("erpnext/templates/lead_info.html", lead_fields)
-	frappe.publish_realtime(event='msgprint',message=popup_content,user="neha@extensioncrm.com")
+	frappe.publish_realtime(event='msgprint',message=popup_content,user="anil@avissupport.com")
 
 
 
