@@ -3,16 +3,14 @@
 /* eslint-disable */
 
 frappe.query_reports["Team Attendance"] = {
-		"formatter": function (value, row, column, data, default_formatter) {
-		value = default_formatter(value, row, column, data);
-
-		if (column.fieldname == "in_time") {
-			value = "<span style='color:green'>" + value + "</span>";
-		}
-		if (column.fieldname == "out_time") {
-			value = "<span style='color:red'>" + value + "</span>";
-		}
-		return value
-		}
-
+	        "filters": [
+                {
+			"fieldname":"month",
+			"label": __("Month"),
+                        "fieldtype": "Select",
+                        "options": ["January","February","March","April","May","June","July","August","September","October","November","December"],
+			"reqd":1
+        }
+	]
 };
+
