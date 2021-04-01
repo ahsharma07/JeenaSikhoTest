@@ -3,14 +3,17 @@
 /* eslint-disable */
 
 frappe.query_reports["My Attendance"] = {
-	"filters": [
-		{
-			"fieldname":"employee",
-			"label": __("Employee"),
-			"fieldtype": "Link",
-			"options": "Employee",
-			"default":frappe.defaults.get_user_default("Employee")
-		}
+	        "filters": [
+                {
+			"fieldname":"month",
+			"label": __("Month"),
+                        "fieldtype": "Select",
+                        "options": ["January","February","March","April","May","June","July","August","September","October","November","December"],
+			"reqd":1
+        }
 	]
 };
+
+
+
 
