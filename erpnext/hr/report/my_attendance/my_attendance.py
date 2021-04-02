@@ -1,4 +1,3 @@
-
 # Copyright (c) 2013, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 from __future__ import unicode_literals
@@ -8,7 +7,6 @@ import datetime
 from datetime import time
 def execute(filters):
 	columns, data = [], []
-#	frappe.msgprint(str(filters))
 	columns = get_columns()
 	data = get_data(filters)
 	chart = get_chart_data(data)
@@ -24,12 +22,9 @@ def get_columns():
 		{"label": _("Out-Time"), "fieldname": "out_time", "fieldtype": "Time", "width": 120},
 		{"label": _("Total-Hrs"), "fieldname": "hrs", "width": 100},
 		{"label": _("Status"), "fieldname": "status",  "width": 100},
-	#	{"label": _("OT-Hrs"), "fieldname": "OT",  "width": 100},
 		]
 def get_data(filters):
 	emp_code=frappe.get_value("User",frappe.session.user,"username")
-#	sort_final_list=[]
-#	frappe.msgprint(str(filters.month))
 	dat =[]
 	u_dat=[]
 	all_data=frappe.db.sql('''SELECT employee as employee,employee_name as employeename,CAST(time as date) as date,MIN(CAST(time as time)) as in_time,
@@ -42,8 +37,7 @@ def get_data(filters):
 		u_dat = list(set(dat))
 		attendance_data=frappe.db.sql(''' SELECT employee as employee ,employee_name as employee_name,attendance_date as date,status as status
 					FROM `tabAttendance` where employee = %s and attendance_date = %s and docstatus = 1''',(data["employee"],data["date"]),as_dict=1)
-#		frappe.msgprint(str(attendance_data))
-		if attendance_data:
+		if attendance_data :
 			data['status'] = attendance_data[0]['status']
 		if data['in_time'] == data['out_time']:
 			data['hrs']=0
@@ -56,20 +50,85 @@ def get_data(filters):
 	att_dat = frappe.db.sql(''' SELECT employee as employee,employee_name as employeename,attendance_date as date,status as status,monthname(attendance_date) as month
 				FROM `tabAttendance` where employee =  %(emp_code)s and monthname(attendance_date)=%(month)s and docstatus = 1 ''',
 				{"emp_code":emp_code,"month":filters.get('month')},as_dict=1)
-#	frappe.msgprint(str(att_dat))
 	lis = []
+	dat1=[]
+	dat2 =[]
+	final_u_list =[]
 	for data in att_dat:
-	#	i = 0
-#		if att_dat:
+		dat1.append(data['date'])
+		dat2 = list(set(dat1))
+	for data in att_dat:
 		if data['date'] not in u_dat:
 			lis.append(data)
-	#		i = i+1
-#	frappe.msgprint(str(lis))
-#	li = [data for data in att_dat if ((data['in_time']=="NaN") and (data['out_time']=="NaN"))]
-	final_list = all_data + lis
-	sort_final_list = (sorted(final_list, key = lambda k:k['date']))
-#	frappe.msgprint(str(sort_final_list))
-	return sort_final_list
+	da = frappe.db.sql('''select holiday_date as date,monthname(holiday_date) as month from `tabHoliday`
+				 where parent="Calendar of 2021" and monthname(holiday_date)=%(month)s ''',
+				{"month":filters.get('month')},as_dict=1)
+	final_u_list = u_dat+dat2
+	l=[]
+	l1=[]
+	l3=[]
+	empty=[]
+	for data in da:
+		if data['date'] not in final_u_list:
+			data.update({"employee":all_data[0]["employee"],"employeename":all_data[0]["employeename"],"status":"Paid Holiday"})
+			l.append(data)
+			final_list = all_data+lis+l
+		if data['date'] in final_u_list:
+			for j in all_data: 
+				for  i in att_dat:
+					p = data['date']
+					frappe.msgprint(str(p))
+#					z=all_data.index(filter(lambda n: n.get('date') =='p' ,all_data)[0])
+				#	z=[val for val in all_data if val('date')=='p'][0]
+					z=[all_data[int(x)] for x in all_data  if x['date']=='p'][0]
+					frappe.msgprint(str(z))
+					empty.append(all_data[z])
+					if (i['status'] == "Present") and (i['date'] == data['date']):
+						data.update({"employee":all_data[0]["employee"],"employeename":all_data[0]["employeename"],"status":"Present Paid Holiday","in_time":empty[0]["in_time"],"out_time":empty[0]["out_time"],"hrs":empty["hrs"]})
+				#	if (i['status'] == "Absent") and (i['date'] == data['date']):
+				#		data.update({"employee":all_data[0]["employee"],"employeename":all_data[0]["employeename"],"status":"Paid Holiday"})
+					if (i['status'] != "Present" or i['status']!="Absent") and (j['date'] == data['date']):
+						data.update({"employee":all_data[0]["employee"],"employeename":all_data[0]["employeename"],"status":"Paid Holiday","in_time":empty[0]["in_time"],"out_time":empty[0]["out_time"]})
+					#	frappe.msgprint(str(data))
+					if (i['status'] == "Absent") and (i['date'] == data['date']):
+						data.update({"employee":all_data[0]["employee"],"employeename":all_data[0]["employeename"],"status":"Paid Holiday"})
+						frappe.msgprint(str(data))
+			l1.append(data)
+			l3 = all_data+lis+l1
+			#frappe.msgprint(str(l3))
+			dates=[]
+			l2=[]
+			my_list_len=len(l3)
+			for i in range(my_list_len-1,-1,-1):
+				if l3[i]['date'] not in dates:
+					dates.append(l3[i]['date'])
+					l2.append(l3[i])
+					final_list = l2
+#	l4=[]
+#	l5=[]
+#	l6=[]
+#	da1 = frappe.db.sql('''select H.holiday_date as date,monthname(H.holiday_date) as month,E.employee from `tabHoliday` H , `tabEmployee` E
+#				where H.parent in ("Week Off Sunday","Week Off Saturday" , "Week Off Friday","Week Off Thursday","Week Off Wednesday",
+#					"Week Off Tuesday","Week Off Monday") and monthname(H.holiday_date)=%(month)s and E.employee =  %(emp_code)s '',
+#				{"month":filters.get('month'),"emp_code":emp_code},as_dict=1)
+#	for data in da1:
+#		if data['date'] not in u_dat:
+#			data.update({"employee":all_data[0]["employee"],"employeename":all_data[0]["employeename"],"status":"Week off"})
+#			l4.append(data)
+#			final_list = all_data+lis+l+l4
+#		if data['date'] in u_dat:
+#			data.update({"employee":all_data[0]["employee"],"employeename":all_data[0]["employeename"],"status":"Present on Week off","in_time":all_data[0]["in_time"],"out_time":all_data[0]["out_time"],"hrs":all_data[0]["hrs"]})
+#			l5.append(data)
+#			l6 = all_dataa_lis+l2+l5
+#			dates1=[]
+#			l7=[]
+#			my_list_len1=len(l6)
+#			for i in range(my_list_len1-1,-1,-1):
+#				if l6[i]['date'] not in dates1:
+##					dates.append(l6[i]['date'])
+#					l7.append(l6[i])
+#			final_list = l7
+	return final_list
 def get_chart_data(att_dat):
 	present =[]
 	absent =[]
@@ -80,7 +139,7 @@ def get_chart_data(att_dat):
 #	frappe.msgprint(str(all_data))
 	for i in att_dat:
 #		frappe.msgprint(str(i))
-		employee.append(i['employee'])
+#		employee.append(i['employee'])
 		try :
 			if i['status'] == 'Present':
 				present.append(i['status'])
