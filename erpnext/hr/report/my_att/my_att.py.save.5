@@ -12,7 +12,6 @@ def execute(filters=None):
 	columns = get_columns()
 	data = get_data(filters)
 	data=sorted(data, key=lambda k: k['date'])
-	frappe.msgprint(str(data))
 	return columns, data
 def get_columns():
         return [
@@ -30,17 +29,17 @@ def get_columns():
 def get_data(filters=None):
 	emp_code=frappe.get_value("User",frappe.session.user,"username")
 	res=[]
-	all_checkins=frappe.db.sql('''SELECT name as checkin,"False" as list_status,employee as employee,employee_name as employee_name,CAST(time as date) as date,MIN(CAST(time as time)) as in_time,log_type as log_type,
-				shift as shift,max(CAST(time as time)) as out_time,monthname(time) as month FROM `tabEmployee Checkin` where employee="HR-EMP-00053"
-				GROUP BY CAST(time as date),employee''',as_dict=1)
 	all_att_data=frappe.db.sql('''select name,attendance_date,status,employee,employee_name,shift from `tabAttendance` where employee=%s''',"HR-EMP-00053",as_dict=1)
 	for att_data in all_att_data:
-		a=0
 		paid_holiday=frappe.db.sql('''select holiday_date from `tabHoliday` where parent=%(calendar)s and holiday_date=%(date)s''',
 			{"calendar":"Calendar of "+str(att_data['attendance_date'].year),"date":att_data['attendance_date']},as_dict=1)
 		emp_holiday=frappe.db.get_value("Employee",att_data['employee'],'holiday_list')
 		week_off=frappe.db.sql('''select holiday_date from `tabHoliday` where parent=%(calendar)s and holiday_date=%(date)s''',
 				{"calendar":emp_holiday,"date":att_data['attendance_date']},as_dict=1)
+		employee_checkin=frappe.db.sql('''SELECT name as checkin,employee as employee,employee_name as employee_name,CAST(time as date) as date,MIN(CAST(time as time)) as in_time,
+                                     log_type as log_type,shift as shift,max(CAST(time as time)) as out_time,monthname(time) as month
+                                      FROM `tabEmployee Checkin` where DATE(time)=%(date)s and employee=%(employee)s''',
+					{"date":att_data['attendance_date'],"employee":att_data["employee"]},as_dict=1)
 		if paid_holiday:
 			if att_data['status']=="Present":
 				att_data['status']="Paid Holiday Present"
@@ -55,20 +54,31 @@ def get_data(filters=None):
                                 att_data['status']="Week Off Half Day"
 			else:
 				att_data['status']="Week Off"
-		for emp_checkin in all_checkins:
-			if emp_checkin['employee']==att_data['employee'] and emp_checkin['date']==att_data['attendance_date'] and not emp_checkin['list_status']==True:
-				emp_checkin['status']=att_data['status']
-				emp_checkin['attendance']=att_data['name']
-				emp_checkin['list_status']=True
-				res.append(emp_checkin)
-				a=1
-				break
-		if a==0:
-			res.append({'attendance':att_data['name'],'employee':att_data['employee'],'employee_name':att_data['employee_name'],'date':att_data['attendance_date'],
-				'shift':att_data['shift'],'status':att_data['status']})
+		if employee_checkin[0]['employee'] is not None:
+			employee_checkin[0]['status']=att_data['status']
+			employee_checkin[0]['attendance']=att_data['name']
+			res.append(employee_checkin[0])
+		else:
+			res.append({'attendance':att_data['name'],'employee':att_data['employee'],'employee_name':att_data['employee_name'],'date':att_data['attendance_date'],'shift':att_data['shift'],
+			'status':att_data['status']})
+	try:
+		 all_daa=frappe.db.sql('''SELECT employee as employee,employee_name as employeename,CAST(time as date) as date,MIN(CAST(time as time)) as in_time,
+                                log_type as log_type,shift as shift,max(CAST(time as time)) as out_time,monthname(time) as month
+                                 FROM `tabEmployee Checkin` where employee = %(emp_code)s and monthname(time)=%(month)s
+                                GROUP BY CAST(time as date),employee''',{"emp_code":emp_code,"month":filters.get('month')},as_dict=1 )
+		dates =[]
+		unique_dates=[]
+		dates1=[]
+		unique_dates1=[]
+		for data in all_daa:
+			dates.append(data['date'])
+			unique_dates=list(set(dates))
+		attendance_data=frappe.db.sql(''' SELECT employee as employee ,employee_name as employee_name,attendance_date as date,status as status
+                                        FROM `tabAttendance` where employee = %s and attendance_date = %s and docstatus = 1''',(data["employee"],data["date"]),
+                                                as_dict=1)
+		for data in attendance_date:
+			dates1.append(data['date')]
+		
+
 	frappe.msgprint(str(res))
-	for emp_checkin in all_checkins:
-		if emp_checkin['list_status']is not True:
-			res.append(emp_checkin)
-			emp_checkin['list_status']=True
 	return res

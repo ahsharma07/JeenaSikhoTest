@@ -31,12 +31,13 @@ def get_data(filters):
 				log_type as log_type,shift as shift,max(CAST(time as time)) as out_time,monthname(time) as month
 				 FROM `tabEmployee Checkin` where employee = %(emp_code)s and monthname(time)=%(month)s 
 			        GROUP BY CAST(time as date),employee''',{"emp_code":emp_code,"month":filters.get('month')},as_dict=1 )
-	frappe.msgprint(str(all_data))	
+#	frappe.msgprint(str(all_data))	
 	for data in all_data:
 		dat.append(data['date'])
 		u_dat = list(set(dat))
 		attendance_data=frappe.db.sql(''' SELECT employee as employee ,employee_name as employee_name,attendance_date as date,status as status
-					FROM `tabAttendance` where employee = %s and attendance_date = %s and docstatus = 1''',(data["employee"],data["date"]),as_dict=1)
+					FROM `tabAttendance` where employee = %s and attendance_date = %s and docstatus = 1''',(data["employee"],data["date"]),
+						as_dict=1)
 		if attendance_data :
 			data['status'] = attendance_data[0]['status']
 		if data['in_time'] == data['out_time']:
@@ -76,13 +77,13 @@ def get_data(filters):
 		if data['date'] in final_u_list:
 			for j in all_data: 
 				for  i in att_dat:
-				#	p = data['date']
-				#	frappe.msgprint(str(p))
+					p = data['date']
+					frappe.msgprint(str(p))
 #					z=all_data.index(filter(lambda n: n.get('date') =='p' ,all_data)[0])
 				#	z=[val for val in all_data if val('date')=='p'][0]
-				#	z=[all_data[int(x)] for x in all_data  if x['date']=='p'][0]
-				#	frappe.msgprint(str(z))
-				##	empty.append(all_data[z])
+					z=[all_data[int(x)] for x in all_data  if x['date']=='p'][0]
+					frappe.msgprint(str(z))
+					empty.append(all_data[z])
 					if (i['status'] == "Present") and (i['date'] == data['date']):
 						data.update({"employee":all_data[0]["employee"],"employeename":all_data[0]["employeename"],"status":"Present Paid Holiday","in_time":empty[0]["in_time"],"out_time":empty[0]["out_time"],"hrs":empty["hrs"]})
 				#	if (i['status'] == "Absent") and (i['date'] == data['date']):
