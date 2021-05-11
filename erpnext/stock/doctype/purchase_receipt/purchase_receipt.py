@@ -85,9 +85,41 @@ class PurchaseReceipt(BuyingController):
 		self.validate_cwip_accounts()
 
 		self.check_on_hold_or_closed_status()
-
+#		frappe.msgprint(str(self.docstatus))
+#		if str(self.docstatus) == "0":
+#			self.create_quality_inspection()
+		for i in self.items:
+			if frappe.db.get_value("Item",i.item_code,"inspection_required_before_purchase"):
+				if frappe.db.get_value("Company",self.company,"inward_warehouse"):
+					i.warehouse = frappe.db.get_value("Company",self.company,"inward_warehouse")
+				else:
+					frappe.throw("Kindly Update Inward Warehouse in Company")
 		if getdate(self.posting_date) > getdate(nowdate()):
 			throw(_("Posting Date cannot be future date"))
+
+#	def on_update(self):
+#		frappe.msgprint(str(self.docstatus)  + " UPdate")
+#		if str(self.docstatus) == "0":
+#			self.create_quality_inspection()
+
+	def create_quality_inspection(self):
+		for d in self.items:
+			frappe.msgprint(str(d.item_code))
+			qc = frappe.db.sql("""select name from `tabQuality Inspection` where item_code = %s and reference_name = %s and row_name = %s""",(d.item_code,self.name,d.name))
+			if frappe.db.get_value("Item", d.item_code, "inspection_required_before_purchase") and not qc and not self.is_return:
+				qi = frappe.new_doc('Quality Inspection')
+				qi.inspection_type = "Incoming"
+				qi.item_code = d.item_code
+				qi.item_name = d.item_name
+				qi.inspected_by = frappe.session.user
+				qi.reference_type = self.doctype
+				qi.reference_name = self.name
+				qi.acc_qty = d.qty
+				qi.batch_no = d.batch_no
+				qi.sample_size = 0
+				qi.row_name = d.name
+				qi.insert()
+				frappe.msgprint("Quality Inspection Created for " + str(d.item_code))
 
 	def validate_cwip_accounts(self):
 		for item in self.get('items'):

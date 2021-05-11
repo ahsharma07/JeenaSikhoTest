@@ -8,14 +8,35 @@
   "tracking_id",
   "current_status",
   "delivered_on",
+  "out_for_delivery_count",
+  "last_ofd_fail_reason",
+  "last_ofd_date",
   "column_break_4",
   "promised_delivery_date",
   "received_by",
   "is_alloted",
+  "first_ofd_date",
+  "first_ofd_fail_reason",
   "section_break_8",
   "courier_tracking",
   "section_break_7",
-  "tracking_details"
+  "tracking_details",
+  "data_17",
+  "reference_number",
+  "pu_date_time",
+  "origin_description",
+  "destination_description",
+  "consignee_name",
+  "status_group",
+  "status_date_time",
+  "origin_area_code",
+  "customer_code",
+  "weight",
+  "special_instructions",
+  "sender",
+  "product_type",
+  "product_code",
+  "new_way_bill_number"
  ],
  "fields": [
   {
@@ -33,13 +54,13 @@
   },
   {
    "fieldname": "promised_delivery_date",
-   "fieldtype": "Date",
+   "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Promised Delivery Date"
   },
   {
    "fieldname": "delivered_on",
-   "fieldtype": "Date",
+   "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Delivered On"
   },
@@ -77,9 +98,117 @@
    "fieldtype": "HTML",
    "label": "Courier Tracking",
    "read_only": 1
+  },
+  {
+   "fieldname": "out_for_delivery_count",
+   "fieldtype": "Data",
+   "label": "Out for Delivery Count"
+  },
+  {
+   "description": "OFD: Out for Delivery",
+   "fieldname": "last_ofd_date",
+   "fieldtype": "Data",
+   "label": "Last OFD Date"
+  },
+  {
+   "description": "OFD: Out for Delivery",
+   "fieldname": "last_ofd_fail_reason",
+   "fieldtype": "Data",
+   "label": "Last OFD Fail Reason"
+  },
+  {
+   "description": "OFD: Out for Delivery",
+   "fieldname": "first_ofd_date",
+   "fieldtype": "Data",
+   "label": "First OFD Date"
+  },
+  {
+   "description": "OFD: Out for Delivery",
+   "fieldname": "first_ofd_fail_reason",
+   "fieldtype": "Data",
+   "label": "First OFD Fail Reason"
+  },
+  {
+   "fieldname": "data_17",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "reference_number",
+   "fieldtype": "Data",
+   "label": "Reference Number"
+  },
+  {
+   "fieldname": "pu_date_time",
+   "fieldtype": "Data",
+   "label": "P/U Date Time"
+  },
+  {
+   "fieldname": "origin_description",
+   "fieldtype": "Data",
+   "label": "Origin Description"
+  },
+  {
+   "fieldname": "destination_description",
+   "fieldtype": "Data",
+   "label": "Destination Description"
+  },
+  {
+   "fieldname": "consignee_name",
+   "fieldtype": "Data",
+   "label": "Consignee Name"
+  },
+  {
+   "fieldname": "status_group",
+   "fieldtype": "Data",
+   "label": "Status Group"
+  },
+  {
+   "fieldname": "status_date_time",
+   "fieldtype": "Data",
+   "label": "Status Date Time"
+  },
+  {
+   "fieldname": "origin_area_code",
+   "fieldtype": "Data",
+   "label": "Origin Area Code"
+  },
+  {
+   "fieldname": "customer_code",
+   "fieldtype": "Data",
+   "label": "Customer Code"
+  },
+  {
+   "fieldname": "weight",
+   "fieldtype": "Data",
+   "label": "Weight"
+  },
+  {
+   "fieldname": "special_instructions",
+   "fieldtype": "Data",
+   "label": "Special Instructions"
+  },
+  {
+   "fieldname": "sender",
+   "fieldtype": "Data",
+   "label": "Sender"
+  },
+  {
+   "fieldname": "product_type",
+   "fieldtype": "Data",
+   "label": "Product Type"
+  },
+  {
+   "fieldname": "product_code",
+   "fieldtype": "Data",
+   "label": "Product Code"
+  },
+  {
+   "fieldname": "new_way_bill_number",
+   "fieldtype": "Data",
+   "label": "New Way Bill Number"
   }
  ],
- "modified": "2021-03-26 11:55:17.356598",
+ "modified": "2021-04-08 18:20:24.507906",
  "modified_by": "Administrator",
  "module": "CRM",
  "name": "Courier Tracking",

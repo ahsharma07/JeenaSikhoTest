@@ -1,0 +1,39 @@
+{
+ "creation": "2021-04-10 11:43:33.215681",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "disease",
+  "many_years"
+ ],
+ "fields": [
+  {
+   "bold": 1,
+   "fieldname": "disease",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Disease (\u092c\u0940\u092e\u093e\u0930\u0940)",
+   "options": "Diseases"
+  },
+  {
+   "bold": 1,
+   "fieldname": "many_years",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Suffering from how many years?(\u0915\u093f\u0924\u0928\u0947 \u0938\u093e\u0932 \u0938\u0947 \u092a\u0940\u0921\u093c\u093f\u0924?)",
+   "options": "\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\nMore than 20"
+  }
+ ],
+ "istable": 1,
+ "modified": "2021-04-10 11:54:26.622355",
+ "modified_by": "Administrator",
+ "module": "CRM",
+ "name": "Disease Child",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

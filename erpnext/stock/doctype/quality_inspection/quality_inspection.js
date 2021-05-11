@@ -55,15 +55,23 @@ cur_frm.fields_dict['item_serial_no'].get_query = function(doc, cdt, cdn) {
 		}
 	}
 	return { filters: filters }
-}
+},
 
-cur_frm.set_query("batch_no", function(doc) {
+cur_frm.fields_dict['batch_no'].get_query = function(doc, cdt, cdn) {
+	const doctype = (doc.reference_type == "Stock Entry") ?
+                "Stock Entry Detail" : doc.reference_type + " Item";
+
 	return {
-		filters: {
-			"item": doc.item_code
-		}
+		query: "erpnext.stock.doctype.quality_inspection.quality_inspection.batch_query",
+                        filters: {
+                                "from": doctype,
+                                "parent": doc.reference_name,
+                                "inspection_type": doc.inspection_type,
+				"item_code": doc.item_code
+                        }
+                };
 	}
-})
+//}
 
 cur_frm.add_fetch('item_code', 'item_name', 'item_name');
 cur_frm.add_fetch('item_code', 'description', 'description');

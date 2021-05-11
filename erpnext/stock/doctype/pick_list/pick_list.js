@@ -139,21 +139,23 @@ frappe.ui.form.on('Pick List', {
 		let get_query_filters = {
 			docstatus: 1,
 			per_delivered: ['<', 100],
-			status: ['!=', ''],
-			customer: frm.doc.customer
+			status: frm.doc.status
+//			customer: frm.doc.customer
 		};
 		frm.get_items_btn = frm.add_custom_button(__('Get Items'), () => {
-			if (!frm.doc.customer) {
+			/*if (!frm.doc.customer) {
 				frappe.msgprint(__('Please select Customer first'));
 				return;
-			}
+			}*/
 			erpnext.utils.map_current_doc({
 				method: 'erpnext.selling.doctype.sales_order.sales_order.create_pick_list',
 				source_doctype: 'Sales Order',
 				target: frm,
 				setters: {
 					company: frm.doc.company,
-					customer: frm.doc.customer
+//					status: "To Deliver and Bill"
+//					customer: frm.doc.customer,
+					status: frm.doc.status
 				},
 				date_field: 'transaction_date',
 				get_query_filters: get_query_filters

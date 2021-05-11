@@ -1,0 +1,26 @@
+{
+ "add_total_row": 0,
+ "creation": "2021-05-01 15:11:41.941174",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "idx": 0,
+ "is_standard": "Yes",
+ "letter_head": "jeena sikho",
+ "modified": "2021-05-05 17:27:49.979223",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "work above 9 hours",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "query": "Select C.employee as \"Employee Id:100\",\n    C.employee_name as \"Employee Name:100\",\n    A.company as \"Company:200\",A.department as \"Department:100\",\n    cast(C.time as date) as \"Date:Date:100\",\n    min(cast(C.time as time)) as \" In_time:100\",\n    max(cast(C.time as time)) as \"Out_time:100\",\n    timediff(max(cast(C.time as time)) , min(cast(C.time as time))) as \"Total-hours:100\",\n    A.status as \"Attendance Status:100\"\nfrom `tabEmployee Checkin` C , `tabAttendance` A \nwhere A.company = %(company)s and A.employee = C.employee and A.status = \"Absent\" and monthname(cast(C.time as date)) =%(month)s  and year(cast(C.time as date)) = %(year)s and cast(C.time as date) = A.attendance_date\ngroup by C.employee,cast(C.time as date)\nhaving (timediff(max(cast(C.time as time)) , min(cast(C.time as time))) > \"8:50:00\")\n\n\n\n\n",
+ "ref_doctype": "HR Settings",
+ "report_name": "work above 9 hours",
+ "report_type": "Query Report",
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ]
+}

@@ -19,7 +19,8 @@
   "section_break_5",
   "status",
   "duration",
-  "recording_url"
+  "recording_url",
+  "account_code"
  ],
  "fields": [
   {
@@ -125,10 +126,15 @@
    "in_list_view": 1,
    "label": "Lead Name",
    "read_only": 1
+  },
+  {
+   "fieldname": "account_code",
+   "fieldtype": "Data",
+   "label": "Account code"
   }
  ],
  "in_create": 1,
- "modified": "2019-08-06 05:46:53.144683",
+ "modified": "2021-04-06 17:07:35.257488",
  "modified_by": "Administrator",
  "module": "Communication",
  "name": "Call Log",

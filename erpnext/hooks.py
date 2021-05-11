@@ -222,6 +222,10 @@ standard_queries = {
 	"Healthcare Practitioner": "erpnext.healthcare.doctype.healthcare_practitioner.healthcare_practitioner.get_practitioner_list"
 }
 
+permission_query_conditions = {
+	"Salary Slip": "erpnext.hr.doctype.salary_slip.salary_slip.permission_query"
+}
+
 doc_events = {
 	"Stock Entry": {
 		"on_submit": "erpnext.stock.doctype.material_request.material_request.update_completed_and_requested_qty",

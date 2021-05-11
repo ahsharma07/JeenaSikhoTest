@@ -1,27 +1,29 @@
 {
- "add_total_row": 0, 
- "apply_user_permissions": 1, 
- "creation": "2013-05-13 14:04:03", 
- "disabled": 0, 
- "docstatus": 0, 
- "doctype": "Report", 
- "idx": 3, 
- "is_standard": "Yes", 
- "modified": "2017-02-24 20:16:50.550242", 
- "modified_by": "Administrator", 
- "module": "HR", 
- "name": "Monthly Attendance Sheet", 
- "owner": "Administrator", 
- "ref_doctype": "Attendance", 
- "report_name": "Monthly Attendance Sheet", 
- "report_type": "Script Report", 
+ "add_total_row": 0,
+ "creation": "2013-05-13 14:04:03",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "idx": 3,
+ "is_standard": "Yes",
+ "modified": "2021-05-11 12:53:07.889221",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Monthly Attendance Sheet",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "query": "select employee,day(attendance_date),status\r\nfrom `tabAttendance`\r\nwhere month(attendance_date) = 5",
+ "ref_doctype": "Attendance",
+ "report_name": "Monthly Attendance Sheet",
+ "report_type": "Script Report",
  "roles": [
   {
    "role": "System Manager"
-  }, 
+  },
   {
    "role": "HR User"
-  }, 
+  },
   {
    "role": "HR Manager"
   }

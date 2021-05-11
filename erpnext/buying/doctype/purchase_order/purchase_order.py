@@ -4,7 +4,8 @@
 from __future__ import unicode_literals
 import frappe
 import json
-from frappe.utils import cstr, flt, cint
+import datetime
+from frappe.utils import cstr, flt, cint,add_days
 from frappe import msgprint, _
 from frappe.model.mapper import get_mapped_doc
 from erpnext.controllers.buying_controller import BuyingController
@@ -232,6 +233,28 @@ class PurchaseOrder(BuyingController):
 		self.update_blanket_order()
 
 		update_linked_doc(self.doctype, self.name, self.inter_company_order_reference)
+		if not self.company == "JEENA SIKHO LIFECARE PVT LTD":
+			self.create_sales_order()
+
+	def create_sales_order(self):
+		sales=frappe.new_doc("Sales Order")
+		sales.customer=self.company
+		sales.order_type="Sales"
+		sales.company="JEENA SIKHO LIFECARE PVT LTD"
+		sales.transaction_date=datetime.date.today()
+		sales.delivery_date=add_days(datetime.date.today(),3)
+		for item in self.items:
+			item_dict={}
+			item_dict['item_code']=item.item_code
+			item_dict['item_name']=item.item_name
+			item_dict['qty']=item.qty
+			item_dict['rate']=item.rate
+			item_dict['price_list_rate']=item.price_list_rate
+			item_dict['amount']=item.amount
+			item_dict['warehouse']="JEENA SIKHO - JSLCP"
+			sales.append("items",item_dict)
+		sales.insert() 
+		sales.submit()
 
 	def on_cancel(self):
 		super(PurchaseOrder, self).on_cancel()

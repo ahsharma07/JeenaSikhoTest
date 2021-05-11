@@ -1,0 +1,26 @@
+{
+ "add_total_row": 0,
+ "creation": "2021-05-01 14:16:24.954020",
+ "disable_prepared_report": 0,
+ "disabled": 1,
+ "docstatus": 0,
+ "doctype": "Report",
+ "idx": 0,
+ "is_standard": "Yes",
+ "letter_head": "jeena sikho",
+ "modified": "2021-05-01 14:39:28.507749",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "working more than 9 hours",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "query": "SELECT employee as 'Employee',employee_name as 'Employee Name',\r\n    FROM 'Employee Checkin'",
+ "ref_doctype": "HR Settings",
+ "report_name": "working more than 9 hours",
+ "report_type": "Query Report",
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ]
+}

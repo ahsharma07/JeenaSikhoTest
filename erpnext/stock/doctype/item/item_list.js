@@ -1,11 +1,13 @@
 frappe.listview_settings['Item'] = {
 	add_fields: ["item_name", "stock_uom", "item_group", "image", "variant_of",
-		"has_variants", "end_of_life", "disabled"],
+		"has_variants", "end_of_life", "disabled","discontinue"],
 	filters: [["disabled", "=", "0"]],
 
 	get_indicator: function(doc) {
 		if (doc.disabled) {
 			return [__("Disabled"), "grey", "disabled,=,Yes"];
+		} else if (doc.discontinue) {
+                        return [__("Discontinue"), "orange", "discontinue,=,Yes"];
 		} else if (doc.end_of_life && doc.end_of_life < frappe.datetime.get_today()) {
 			return [__("Expired"), "grey", "end_of_life,<,Today"];
 		} else if (doc.has_variants) {

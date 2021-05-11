@@ -92,6 +92,25 @@ class Lead(SellingController):
 		if receiver_list:
 			message=f"Your Appointment is booked {self.clinic_address} at {getdate(self.schedule_date).strftime('%d-%m-%Y %H:%M:%S')}. For Navigation {self.clinic_map}  "
 			send_sms(receiver_list, cstr(message))
+			create_communication(self)
+
+	def create_communication(self):
+		communication = frappe.new_doc("Communication")
+		communication.update({
+			"communication_type": "Communication",
+			"communication_medium": "Email",
+			"sent_or_received": "Received",
+			"email_status": "Open",
+			"subject": self.subject,
+			"sender": self.raised_by,
+			"content": self.description,
+			"status": "Linked",
+			"reference_doctype": "Issue",
+			"reference_name": self.name
+		})
+		communication.ignore_permissions = True
+		communication.ignore_mandatory = True
+		communication.save()
 	def create_appointment(self):
 		new_doc=frappe.new_doc("Appointment")
 		new_doc.customer_name=self.lead_name

@@ -21,6 +21,9 @@ from erpnext.setup.doctype.item_group.item_group import get_item_group_defaults
 from erpnext.manufacturing.doctype.production_plan.production_plan import get_items_for_material_requests
 from erpnext.accounts.doctype.sales_invoice.sales_invoice import validate_inter_company_party, update_linked_doc,\
 	unlink_inter_company_doc
+from datetime import date
+from datetime import datetime,timedelta
+import datetime
 
 form_grid_templates = {
 	"items": "templates/form_grid/item_grid.html"
@@ -40,6 +43,7 @@ class SalesOrder(SellingController):
 		self.validate_uom_is_integer("stock_uom", "stock_qty")
 		self.validate_uom_is_integer("uom", "qty")
 		self.validate_for_items()
+
 		self.validate_warehouse()
 		self.validate_drop_ship()
 		self.validate_serial_no_based_delivery()
@@ -57,20 +61,118 @@ class SalesOrder(SellingController):
 
 		if not self.billing_status: self.billing_status = 'Not Billed'
 		if not self.delivery_status: self.delivery_status = 'Not Delivered'
-		if self.status == "Draft":
-			self.status = "On Hold"
-		if self.delivery_pincode:
+		if frappe.db.get_value("Customer",self.customer,'customer_type') not in ("Distributor",'Clinic'):
+			if self.status == "Draft":
+				self.status = "Address Verification"
+			#if self.delivery_pincode:
 			self.set_delivery()
 
 
 	def set_delivery(self):
-		frappe.msgprint(str(self.delivery_pincode))
-		data=frappe.db.sql("""select dm.name,pm.performance_percentage,pm.eta_in_hrs from `tabPincode Mapping` as pm ,`tabDelivery Mapping` as dm where pm.pincode = %s and dm.name = pm.parent and pm.prepaid = "YES" and pm.cod = "NO" order by  pm.performance_percentage DESC,pm.eta_in_hrs ASC ;""",(self.delivery_pincode),as_dict = 1)
-		frappe.msgprint(str(data))
-		frappe.msgprint(str(data[0]['name']))
-		self.delivery_by = data[0]['name']
-		self.eta_in_hrs = data[0]['eta_in_hrs']
-		self.performance_percentage = data[0]['performance_percentage']
+		for i in self.items:
+			picked = False
+			distributor = False
+			doc = frappe.get_doc("Item",i.item_code)
+			if frappe.db.get_value("Item",i.item_code,"default_algorithm"):	
+				data=frappe.db.sql("""select dm.name,pm.performance_percentage,pm.eta_in_hrs,dm.mapping_for from `tabPincode Mapping` as pm ,`tabDelivery Mapping` as dm ,
+					`tabProduct Mapping` as prod where pm.pincode = %s 
+					and dm.name = pm.parent and pm.prepaid = "YES" and pm.cod = "NO" and dm.mapping_for = "Clinic" and prod.item_code = %s 
+					order by  pm.performance_percentage DESC,pm.eta_in_hrs ASC ;""",(self.delivery_pincode,i.item_code),as_dict = 1)
+				if data:
+					picked,distributor = self.stock_check(data,i)
+				if not data or not picked:
+					data=frappe.db.sql("""select dm.name,pm.performance_percentage,pm.eta_in_hrs,dm.mapping_for from `tabPincode Mapping` as pm ,`tabDelivery Mapping` as dm ,
+					`tabProduct Mapping` as prod where pm.pincode = %s and 
+					dm.name = pm.parent and pm.prepaid = "YES" and pm.cod = "NO" and dm.mapping_for = "Distributor" and prod.item_code = %s
+					order by  pm.performance_percentage DESC,pm.eta_in_hrs ASC ;""",(self.delivery_pincode,i.item_code),as_dict = 1)
+				if data:
+                                        picked,distributor = self.stock_check(data,i)
+				if not data or (not distributor or not picked):
+					data=frappe.db.sql("""select dm.name,pm.performance_percentage,pm.eta_in_hrs,dm.mapping_for from `tabPincode Mapping` as pm ,`tabDelivery Mapping` as dm,
+                                        `tabProduct Mapping` as prod where pm.pincode = %s and 
+					dm.name = pm.parent and pm.prepaid = "YES" and pm.cod = "NO" and dm.mapping_for = "Courier" and prod.item_code = %s
+                                        order by  pm.performance_percentage DESC,pm.eta_in_hrs ASC ;""",(self.delivery_pincode,i.item_code),as_dict = 1)
+				if data:
+                                        data = self.stock_check(data,i)
+				frappe.msgprint(str(data) + "Yes ")
+			elif frappe.db.get_value("Item",i.item_code,"pure_performance_algorithm"):
+				data=frappe.db.sql("""select dm.name,pm.performance_percentage,pm.eta_in_hrs,dm.mapping_for from `tabPincode Mapping` as pm ,`tabDelivery Mapping` as dm ,
+                                        `tabProduct Mapping` as prod where pm.pincode = %s
+                                        and dm.name = pm.parent and pm.prepaid = "YES" and pm.cod = "NO" and prod.item_code = %s
+                                        order by  pm.performance_percentage DESC,pm.eta_in_hrs ASC ;""",(self.delivery_pincode,i.item_code),as_dict = 1)
+				if data:
+					picked,distributor = self.stock_check(data,i)
+			elif frappe.db.get_value("Item",i.item_code,"courier_priority_algorithm"):
+				priorities=frappe.get_all("Courier Multitable",filters={"parent":i.item_code},fields={'*'})
+				if priorities:
+					for prior in priorities:
+						data=frappe.db.sql('''select dm.name,pm.performance_percentage,pm.eta_in_hrs,dm.mapping_for from `tabPincode Mapping` as pm,
+						 	`tabDelivery Mapping` as dm,`tabProduct Mapping` as prod where pm.pincode = %s and dm.name=pm.parent and 
+							pm.prepaid="YES" and pm.cod="NO" and prod.item_code=%s and dm.mapping_for="Courier" and dm.name=%s 
+							order by  pm.performance_percentage DESC,pm.eta_in_hrs ASC ''',(self.delivery_pincode,i.item_code,prior.courier),as_dict = 1)
+						if data:
+							picked,courier=self.stock_check(data,i)
+			elif frappe.db.get_value("Item",i.item_code,'courier_dealer_clinic_post'):
+				data=frappe.db.sql('''select dm.name,pm.performance_percentage,pm.eta_in_hrs,dm.mapping_for from `tabPincode Mapping` as pm,
+						`tabDelivery Mapping` as dm,`tabProduct Mapping` as prod where pm.pincode = %s and dm.name=pm.parent and
+						pm.prepaid="YES" and pm.cod="NO" and prod.item_code=%s and dm.mapping_for="Courier"
+						order by  pm.performance_percentage DESC,pm.eta_in_hrs ASC ''',(self.delivery_pincode,i.item_code),as_dict=1)
+				if data:
+					picked,courier=self.stock_check(data,i)
+				if not data or(not picked or not courier): 
+					data=frappe.db.sql("""select dm.name,pm.performance_percentage,pm.eta_in_hrs,dm.mapping_for from `tabPincode Mapping` as pm ,
+						`tabDelivery Mapping` as dm,
+						`tabProduct Mapping` as prod where pm.pincode = %s and
+						dm.name = pm.parent and pm.prepaid = "YES" and pm.cod = "NO" and dm.mapping_for = "Distributor" and prod.item_code = %s
+						order by  pm.performance_percentage DESC,pm.eta_in_hrs ASC ;""",(self.delivery_pincode,i.item_code),as_dict = 1)
+					if data:
+						picked,distributor = self.stock_check(data,i)
+				if not data or (not distributor or not picked):
+					data=frappe.db.sql("""select dm.name,pm.performance_percentage,pm.eta_in_hrs,dm.mapping_for from `tabPincode Mapping` as pm ,
+						`tabDelivery Mapping` as dm,`tabProduct Mapping` as prod where pm.pincode = %s
+						and dm.name = pm.parent and pm.prepaid = "YES" and pm.cod = "NO" and dm.mapping_for = "Clinic" and prod.item_code = %s
+						order by  pm.performance_percentage DESC,pm.eta_in_hrs ASC ;""",(self.delivery_pincode,i.item_code),as_dict = 1)
+					if data:
+						 picked,distributor = self.stock_check(data,i)
+				if not data or not picked:
+					pass
+
+	def stock_check(self,data,i):
+		if i:
+			frappe.msgprint(str(i.item_code) + "supplier")
+			for d in data:
+				#update_bin_qty(i.item_code,frappe.db.get_value("Supplier",data['name'],"default_accepted_warehouse"))
+				bin_qty = frappe.db.get_value("Bin",
+			{"item_code": i.item_code, "warehouse": frappe.db.get_value("Supplier",d.name,"default_accepted_warehouse")}, "actual_qty")
+				if not bin_qty or bin_qty <= 0:
+					if not bin_qty:
+						bin_qty = 0
+					if frappe.db.get_value("Supplier",d.name,"zero_stock_assign"):
+						if bin_qty > frappe.db.get_value("Supplier",d.name,"zero_stock_assign"):
+							bin_qty = 1
+				frappe.msgprint(str(bin_qty) + "Supp" + str(d.name))
+				pro_mapped=frappe.db.sql('''select item_code from `tabProduct Mapping` where parent=%(parent)s and item_code=%(item)s''',
+					{"parent":d.name,"item":i.item_code},as_dict=1)
+				frappe.msgprint(str(pro_mapped) + "pro")
+				if pro_mapped and bin_qty > 0:
+					i.supplier = d.name
+					if not d.mapping_for == "Courier":
+						i.delivery_by = d.name
+						i.delivered_by_supplier = 1
+					else:
+						i.delivery_by = "JEENA SIKHO LIFECARE PVT LTD"
+					i.eta_in_hrs = d.eta_in_hrs
+					i.delivery_date = date.today()+timedelta(hours= d.eta_in_hrs)
+					i.perfomance_percentage = d.performance_percentage
+					i.mapping_to = d.mapping_for
+					return True,True
+					break
+		
+		if not data:
+			frappe.msgprint("No Data")
+			self.status = "Pincode Not Serviceable"
+		return False,False
+		
 	def validate_po(self):
 		# validate p.o date v/s delivery date
 		if self.po_date and not self.skip_delivery_note:
@@ -200,7 +302,48 @@ class SalesOrder(SellingController):
 		if self.coupon_code:
 			from erpnext.accounts.doctype.pricing_rule.utils import update_coupon_code_count
 			update_coupon_code_count(self.coupon_code,'used')
+		#if self.delivery_pincode:
+                #        self.set_delivery()
+		if frappe.db.get_value("Customer",self.customer,'customer_type') not in ("Distributor",'Clinic'):
+			all_data=[]
+			if not self.status=="Pincode Not Serviceable":
+				for item in self.items:
+					if item.mapping_to == "Courier":
+						all_data.append("JEENA SIKHO LIFECARE PVT LTD")
+					else:
+						all_data.append(item.delivery_by)
+			frappe.msgprint(str(all_data))
+			if all_data:
+				all_data=sorted(set(all_data))
+				submit = 0
+				for data in all_data:
+					submit = 0
+					doc=frappe.new_doc("Delivery Note")
+					doc.company=data
+					doc.customer = self.customer
+					for item in self.items:
+						if data==item.delivery_by:
+							frappe.msgprint(str(item.qty))
+							item_dict={}
+							item_dict['item_code']=item.item_code
+							item_dict['item_name']=item.item_name
+							item_dict['qty']=item.qty
+							item_dict['uom']=item.uom
+							item_dict['stock_uom']=item.stock_uom
+							item_dict['price_list_rate']=item.price_list_rate
+							item_dict['rate']=item.rate
+							item_dict['warehouse']=frappe.db.get_value("Company",data,"default_warehouse")
+							item_dict['against_sales_order']=self.name
+							if item.actual_qty <= 0 and not submit == 1:
+								submit = 1
+							doc.append("items",item_dict)
 
+#				frappe.msgprint(str(doc))
+					doc.insert(ignore_permissions=True)
+					if submit == 0:
+						doc.submit()
+#				frappe.msgprint(str(data))
+#				doc=frappe.new_doc("Delivery Note")
 	def on_cancel(self):
 		super(SalesOrder, self).on_cancel()
 

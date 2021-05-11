@@ -38,7 +38,7 @@ def execute(filters=None):
 		total_p = total_a = total_l = 0.0
 		for day in range(filters["total_days_in_month"]):
 			status = att_map.get(emp).get(day + 1, "None")
-			status_map = {"Present": "P", "Absent": "A", "Half Day": "HD", "On Leave": "L", "None": "", "Holiday":"<b>H</b>"}
+			status_map = {"Present": "P", "Absent": "A", "Half Day": "HD", "On Leave": "L","Paid Holiday Present":"PHP","Paid Holiday Half Day":"PHHD","Paid Holiday":"PH","Week Of Present":"WOP","Week Off Half Day":"WOHD","Week Off":"WO", "None": "", "Holiday":"<b>H</b>"}
 			if status == "None" and holiday_map:
 				emp_holiday_list = emp_det.holiday_list if emp_det.holiday_list else default_holiday_list
 				if emp_holiday_list in holiday_map and (day+1) in holiday_map[emp_holiday_list]:
@@ -104,14 +104,32 @@ def get_columns(filters):
 	return columns
 
 def get_attendance_list(conditions, filters):
-	attendance_list = frappe.db.sql("""select employee, day(attendance_date) as day_of_month,
+	attendance_list = frappe.db.sql("""select employee, day(attendance_date) as day_of_month,attendance_date as date,
 		status from tabAttendance where docstatus = 1 %s order by employee, attendance_date""" %
 		conditions, filters, as_dict=1)
 
 	att_map = {}
 	for d in attendance_list:
+		paid_holiday=frappe.db.sql('''select holiday_date from `tabHoliday` where parent=%(calendar)s and holiday_date=%(date)s''',
+						{"calendar":"Calendar of "+str(d['date'].year),"date":d['date']},as_dict=1)
+		week_off=frappe.db.sql('''select holiday_date from `tabHoliday` where parent=%(calendar)s and holiday_date=%(date)s''',
+						{"calendar":emp_holiday,"date":d['date']},as_dict=1)
 		att_map.setdefault(d.employee, frappe._dict()).setdefault(d.day_of_month, "")
 		att_map[d.employee][d.day_of_month] = d.status
+		if paid_holiday:
+			if d.status == "Present":
+				att_map[d.employee][d.day_of_month] ="Paid Holiday Present"
+			elif d.status=="Half Day":
+				att_map[d.employee][d.day_of_month] ="Paid Holiday Half Day"
+			else:
+				att_map[d.employee][d.day_of_month] ="Paid Holiday"
+		elif week_off:
+			if s.status=="Present":
+				 att_map[d.employee][d.day_of_month]="Week Off Present"
+			elif d.status=="Half Day":
+				 att_map[d.employee][d.day_of_month]="Week Off Half Day"
+			else:
+				 att_map[d.employee][d.day_of_month]="Week Off"
 
 	return att_map
 

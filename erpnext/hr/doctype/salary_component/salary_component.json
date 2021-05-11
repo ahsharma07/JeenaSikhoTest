@@ -236,8 +236,7 @@
   {
    "fieldname": "base_amount",
    "fieldtype": "Currency",
-   "label": "Base",
-   "reqd": 1
+   "label": "Base"
   },
   {
    "fieldname": "loan",
@@ -246,7 +245,7 @@
   }
  ],
  "icon": "fa fa-flag",
- "modified": "2020-12-02 16:46:22.382597",
+ "modified": "2021-04-14 14:05:33.970063",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Salary Component",

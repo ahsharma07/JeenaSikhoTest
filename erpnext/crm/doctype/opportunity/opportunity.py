@@ -166,14 +166,38 @@ class Opportunity(TransactionBase):
 		receiver_list = []
 		receiver_list.append(frappe.db.get_value("Lead",self.party_name,"phone"))
 		if receiver_list:
+#			if self.schedule_date:
+			address=self.clinic_address[12:]
+			address=address.replace("</strong></h1>","")
 			if self.schedule_date:
-				address=self.clinic_address[12:]
-				address=address.replace("</strong></h1>","")
 				message=f"Your Appointment is booked {address} at {self.schedule_date}. For Navigation {self.clinic_map}  "
 				self.create_appointment()
+				subject = "Appointment Booked"
 			else:
-				 message=f"Clinic Address is  {address} . For Navigation {self.clinic_map}  "
+				message=f"Clinic Address is  {address} . For Navigation {self.clinic_map}  "
+				subject = "Clinic Address"
 			send_sms(receiver_list, cstr(message))
+			for i in receiver_list:
+				self.create_communication(subject,i,message)
+
+	def create_communication(self,subject,receiver_list,message):
+		communication = frappe.new_doc("Communication")
+		communication.update({
+			"communication_type": "Communication",
+			"communication_medium": "SMS",
+			"sent_or_received": "Sent",
+#			"email_status": "Open",
+			"subject": subject,
+#			"sender": self.raised_by,
+			"phone_no":receiver_list,
+			"content": message,
+			"status": "Linked",
+			"reference_doctype": self.opportunity_from,
+			"reference_name": self.party_name
+		})
+		communication.ignore_permissions = True
+		communication.ignore_mandatory = True
+		communication.save()
 	def create_appointment(self):
 		new_doc=frappe.new_doc("Appointment")
 		new_doc.customer_name=self.party_name

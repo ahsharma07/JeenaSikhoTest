@@ -17,8 +17,8 @@
   {
    "fieldname": "company",
    "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company",
+   "label": "Delivery Patner",
+   "options": "Supplier",
    "unique": 1
   },
   {
@@ -61,7 +61,7 @@
    "options": "Product Mapping"
   }
  ],
- "modified": "2021-03-19 18:20:20.280474",
+ "modified": "2021-04-15 15:56:08.381185",
  "modified_by": "Administrator",
  "module": "Selling",
  "name": "Delivery Mapping",

@@ -17,6 +17,7 @@
   "item_serial_no",
   "batch_no",
   "sample_size",
+  "con_factor",
   "column_break1",
   "item_name",
   "description",
@@ -228,14 +229,17 @@
    "label": "Status",
    "options": "\nAccepted\nRejected",
    "reqd": 1
+  },
+  {
+   "fieldname": "con_factor",
+   "fieldtype": "Float",
+   "label": "Conversion factor"
   }
  ],
  "icon": "fa fa-search",
  "idx": 1,
- "index_web_pages_for_search": 1,
  "is_submittable": 1,
- "links": [],
- "modified": "2020-09-12 16:11:31.910508",
+ "modified": "2021-05-01 23:49:59.650049",
  "modified_by": "Administrator",
  "module": "Stock",
  "name": "Quality Inspection",

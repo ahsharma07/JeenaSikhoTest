@@ -120,6 +120,27 @@ erpnext.accounts.PurchaseInvoice = erpnext.buying.BuyingController.extend({
 					}
 				})
 			}, __("Get items from"));
+			this.frm.add_custom_button(__('Sales Invoice'),
+                                function() {
+                                        erpnext.utils.map_current_doc({
+                                                method: "erpnext.accounts.doctype.sales_invoice.sales_invoice.make_purchase_invoice",
+                                                source_doctype: "Sales Invoice",
+                                                target: me.frm,
+                                                setters: {
+                                                        supplier: me.frm.doc.supplier || undefined
+//							date_range: undefined
+                                                },
+                                                get_query_filters: {
+//                                                        material_request_type: "Purchase",
+//                                                        docstatus: 1
+//                                                        status: ["!=", "Stopped"]
+	//                                                        per_ordered: ["<", 99.99],
+                                                      company: me.frm.doc.supplier
+                                                }
+                                        })
+                                }, __("Get items from"));
+
+
 		}
 		this.frm.toggle_reqd("supplier_warehouse", this.frm.doc.is_subcontracted==="Yes");
 

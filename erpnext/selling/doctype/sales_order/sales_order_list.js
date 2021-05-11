@@ -7,6 +7,9 @@ frappe.listview_settings['Sales Order'] = {
 		        //Address Verification
                         return [__("Address Verification"), "green", "status,=,Address Verification"];
                 }
+		else if(doc.status=="Pincode Not Serviceable"){
+			return[__("Pincode Not Serviceable"),"red"];
+		}
                 else if (doc.status === "Closed") {
 			// Closed
 			return [__("Closed"), "green", "status,=,Closed"];

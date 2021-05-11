@@ -18,5 +18,11 @@ def get_data():
 			{
 				'items':['Sales Order']
 			},
+			{
+                                'items': ['Quality Feedback']
+                        },
+			{
+                                'items': ['Issue']
+                        },
 		]
 	}

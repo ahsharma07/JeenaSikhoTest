@@ -24,6 +24,7 @@ from erpnext.accounts.general_ledger import get_round_off_account_and_cost_cente
 from erpnext.accounts.doctype.loyalty_program.loyalty_program import \
 	get_loyalty_program_details_with_points, get_loyalty_details, validate_loyalty_points
 from erpnext.accounts.deferred_revenue import validate_service_stop_date
+from erpnext.stock.doctype.item.item import get_item_defaults
 
 from erpnext.healthcare.utils import manage_invoice_submit_cancel
 
@@ -495,7 +496,7 @@ class SalesInvoice(SellingController):
 		super(SalesInvoice, self).validate_with_previous_doc({
 			"Sales Order": {
 				"ref_dn_field": "sales_order",
-				"compare_fields": [["customer", "="], ["company", "="], ["project", "="], ["currency", "="]]
+				"compare_fields": [["customer", "="], ["project", "="], ["currency", "="]]
 			},
 			"Sales Order Item": {
 				"ref_dn_field": "so_detail",
@@ -505,7 +506,7 @@ class SalesInvoice(SellingController):
 			},
 			"Delivery Note": {
 				"ref_dn_field": "delivery_note",
-				"compare_fields": [["customer", "="], ["company", "="], ["project", "="], ["currency", "="]]
+				"compare_fields": [["customer", "="], ["project", "="], ["currency", "="]]
 			},
 			"Delivery Note Item": {
 				"ref_dn_field": "dn_detail",
@@ -1580,3 +1581,159 @@ def create_invoice_discounting(source_name, target_doc=None):
 	})
 
 	return invoice_discounting
+@frappe.whitelist()
+def make_material_request(source_name, target_doc=None):
+
+	def postprocess(source, target_doc):
+#		if frappe.flags.args and frappe.flags.args.default_supplier:
+			# items only for given default supplier
+#			supplier_items = []
+#			for d in target_doc.items:
+#				default_supplier = get_item_defaults(d.item_code, target_doc.company).get('default_supplier')
+#				if frappe.flags.args.default_supplier == default_supplier:
+#					supplier_items.append(d)
+#			target_doc.items = supplier_items
+		set_missing_values(source, target_doc)
+
+	def select_item(d):
+		return d.ordered_qty < d.stock_qty
+
+	def set_missing_values(source, target):
+		target.ignore_pricing_rule = 1
+		target.flags.ignore_permissions = True
+#		target.run_method("set_missing_values")
+		target.run_method("set_po_nos")
+		target.run_method("calculate_taxes_and_totals")
+
+#		if source.company_address:
+#		target.update({'company': "JEENA SIKHO LIFECARE PVT LTD",
+#				'customer': source.company,
+#				'set_warehouse': 'JEENA SIKHO - JSLCP'})
+#		else:
+			# set company address
+#		target.update(get_company_address(target.company))
+
+#		if target.company_address:
+#			target.update(get_fetch_values("Sales Invoice", 'company_address', target.company_address))
+
+#	def update_item(source, target, source_parent):
+#		target.amount = flt(source.amount) - flt(source.billed_amt)
+#		target.base_amount = target.amount * flt(source_parent.conversion_rate)
+#		target.qty = target.amount / flt(source.rate) if (source.rate and source.billed_amt) else source.qty - source.returned_qty
+#
+#		if source_parent.project:
+#			target.cost_center = frappe.db.get_value("Project", source_parent.project, "cost_center")
+#		if target.item_code:
+#			item = get_item_defaults(target.item_code, source_parent.company)
+#			item_group = get_item_group_defaults(target.item_code, source_parent.company)
+#			cost_center = item.get("selling_cost_center") \
+#				or item_group.get("selling_cost_center")
+#
+#			if cost_center:
+#				target.cost_center = cost_center
+
+	doclist = get_mapped_doc("Material Request", source_name, 	{
+		"Material Request": {
+			"doctype": "Delivery Note",
+			"validation": {
+				"docstatus": ["=", 1],
+				"material_request_type": ["=", "Purchase"]
+#				"customer": ['=',source.customer]
+			},
+			"field_no_map": ["company"]
+		},
+		"Material Request Item": {
+			"doctype": "Delivery Note Item",
+			"field_map": [
+				["name", "material_request_item"],
+				["parent", "material_request"],
+				["uom", "stock_uom"],
+				["uom", "uom"],
+				["sales_order", "sales_order"],
+				["sales_order_item", "sales_order_item"],
+#				["cost_center", "Main - JSLCP"],
+#				["JEENA SIKHO - JSLCP", 'warehouse']
+			],
+			'field_no_map':['warehouse','cost_center'],
+#			"postprocess": update_item,
+			"condition": select_item
+		},
+		"Sales Taxes and Charges": {
+			"doctype": "Sales Taxes and Charges",
+			"add_if_empty": True
+		},
+	}, target_doc, postprocess)
+
+	return doclist
+
+
+@frappe.whitelist()
+def make_purchase_invoice(source_name, target_doc=None):
+	return get_mapped_purchase_invoice(source_name, target_doc)
+
+def get_mapped_purchase_invoice(source_name, target_doc=None, ignore_permissions=False):
+	def postprocess(source, target):
+		target.flags.ignore_permissions = ignore_permissions
+		set_missing_values(source, target)
+		#Get the advance paid Journal Entries in Purchase Invoice Advance
+
+		if target.get("allocate_advances_automatically"):
+			target.set_advances()
+
+	def update_item(obj, target, source_parent):
+#		target.amount = flt(obj.amount) - flt(obj.billed_amt)
+#		target.base_amount = target.amount * flt(source_parent.conversion_rate)
+#		target.qty = target.amount / flt(obj.rate) if (flt(obj.rate) and flt(obj.billed_amt)) else flt(obj.qty)
+
+		item = get_item_defaults(target.item_code, source_parent.company)
+#		item_group = get_item_group_defaults(target.item_code, source_parent.company)
+#		target.cost_center = (obj.cost_center
+#			or frappe.db.get_value("Project", obj.project, "cost_center")
+#			or item.get("buying_cost_center")
+#			or item_group.get("buying_cost_center"))
+
+	fields = {
+		"Sales Invoice": {
+			"doctype": "Purchase Invoice",
+			"field_map": {
+				"party_account_currency": "party_account_currency",
+				"supplier_warehouse":"supplier_warehouse"
+			},
+			"validation": {
+				"docstatus": ["=", 1],
+			},
+			"field_no_map" :{'company','supplier','inter_company_invoice_reference'},
+		},
+		"Sales Invoice Item": {
+			"doctype": "Purchase Invoice Item",
+			"field_map": {
+				"name": "si_detail",
+				"parent": "sales_invoice",
+			},
+			"field_no_map":{'warehouse','expense_account','cost_center'},
+			"postprocess": update_item,
+#			"condition": lambda doc: (doc.base_amount==0 or abs(doc.billed_amt) < abs(doc.amount))
+		}
+#		"Sales Taxes and Charges": {
+#			"doctype": "Purchase Taxes and Charges",
+#			"add_if_empty": True
+#		},
+	}
+
+	if frappe.get_single("Accounts Settings").automatically_fetch_payment_terms == 1:
+		fields["Payment Schedule"] = {
+			"doctype": "Payment Schedule",
+			"add_if_empty": True
+		}
+
+	doc = get_mapped_doc("Sales Invoice", source_name,	fields,
+		target_doc, postprocess, ignore_permissions=ignore_permissions)
+
+	return doc
+
+def set_missing_values(source, target):
+	target.ignore_pricing_rule = 1
+	target.update_stock = 1
+	target.run_method("set_missing_values")
+	target.run_method("calculate_taxes_and_totals")
+

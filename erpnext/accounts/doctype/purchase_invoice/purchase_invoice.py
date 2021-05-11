@@ -101,6 +101,7 @@ class PurchaseInvoice(BuyingController):
 		self.create_remarks()
 		self.set_status()
 		self.validate_purchase_receipt_if_update_stock()
+		frappe.msgprint(str(self.company) + "supplier" + str(self.supplier))
 		validate_inter_company_party(self.doctype, self.supplier, self.company, self.inter_company_invoice_reference)
 
 	def validate_release_date(self):

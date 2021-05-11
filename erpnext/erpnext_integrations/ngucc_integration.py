@@ -10,9 +10,9 @@ def call(doc):
 	response = requests.request("GET", url,verify=False)
 	data=json.loads(response.text.encode('utf8'))
 	if data.get("response")=="Success":
-		frappe.publish_realtime('lead_updates',message="Dialing",user="neha@extensioncrm.com")
+		frappe.publish_realtime('lead_updates',message="Dialing",user=frappe.session.user)
 	elif data.get("message").__contains__("not logged in."):
-		frappe.publish_realtime('lead_updates',message="Agent Not logged in",user="neha@extensioncrm.com")
+		frappe.publish_realtime('lead_updates',message="Agent Not logged in",user=frappe.session.user)
 
 @frappe.whitelist()
 def end_call(doc):
@@ -26,9 +26,9 @@ def end_call(doc):
 	data=json.loads(response.text.encode('utf-8'))
 	if data:
 		if data.get("response")=="Success":
-			frappe.publish_realtime('lead_updates',message="Call Ended",user="neha@extensioncrm.com")
+			frappe.publish_realtime('lead_updates',message="Call Ended",user=frappe.session.user)
 		elif data.get("message").__contains__("not logged in."):
-			frappe.publish_realtime('lead_updates',message="Agent Not Logged In",user="neha@extensioncrm.com")
+			frappe.publish_realtime('lead_updates',message="Agent Not Logged In",user=frappe.session.user)
 	else:
 		frappe.throw("Dialer is not working Properly")
 
@@ -49,7 +49,8 @@ def incoming_call_handle(**kwargs):
 			call_log=update_call_log(call_payload, call_log=call_log)
 		if call_log:
 			kwargs['success']=True
-		return kwargs
+			return "call logs received"
+		return False
 	else:
 		frappe.db.rollback()
 		frappe.log_error(title=_('Error in Handling incoming call'))
@@ -68,7 +69,7 @@ def get_call_log(call_payload):
 	}, limit=1)
 
 	if call_log:
-		return frappe.get_doc('Call Log', call_log[0].name)
+		return frappe.get_doc('Call Log', call_log[0].name)	 # no field name as name
 from datetime import datetime
 @frappe.whitelist()
 def create_call_log(call_payload):
@@ -92,8 +93,36 @@ def update_call_log(call_payload, status='Ringing', call_log=None):
 	if call_log:
 		call_log.status = status
 		call_log.to = call_payload.get('DialWhomNumber')
-                #call_log.duration = call_payload.get('DialCallDuration') or 0
-		call_log.recording_url = call_payload.get('RecordingUrl')
+        # call_log.duration = call_payload.get('DialCallDuration') or 0
+		call_log.recording_url = call_payload.get('recording_url')
+		call_log.log_id = call_payload.get('log_id')
+		call_log.account_code = call_payload.get('id')
+		call_log.acw_duration = call_payload.get('acw_duration')
+		call_log.call_duration = call_payload.get('call_duration')
+		call_log.callstart_date = call_payload.get('callstart_date')
+		call_log.call_status = call_payload.get('call_status')
+		call_log.call_type = call_payload.get('call_type')
+		call_log.camp_name = call_payload.get('camp_name')
+		call_log.confdtmf_input = call_payload.get('confdtmf_input')
+		call_log.disconnected_by = call_payload.get('disconnected_by')
+		call_log.disposition_description = call_payload.get('disposition_description')
+		call_log.disposition_type = call_payload.get('disposition_type')
+		call_log.disposition = call_payload.get('disposition')
+		# call_log.to = call_payload.get('dnis')
+		call_log.hangup_cause = call_payload.get('hangup_cause')
+		call_log.hold_duration = call_payload.get('hold_duration')
+		call_log.list_id = call_payload.get('list_id')
+		# call_log.from = call_payload.get('phone number')
+		call_log.qname = call_payload.get('qname')
+		call_log.queue_duration = call_payload.get('queue_duration')
+		call_log.recording_duration = call_payload.get('recording_duration')
+		call_log.skill_name = call_payload.get('skill_name')
+		call_log.duration = call_payload.get('duration')
+		call_log.unique_id = call_payload.get('unique_id')
+		call_log.user = call_payload.get('user')
+		call_log.callend_date = call_payload.get('callend_date')
+		call_log.recording_url = call_payload.get('recording_url')
+
 		call_log.save(ignore_permissions=True)
 		frappe.db.commit()
 		return call_log
@@ -121,7 +150,7 @@ def create_popup(mobile_no):
 			'lead_name':lead.name}
 	frappe.log_error(lead_fields,"lead")
 	popup_content = frappe.render_template("erpnext/templates/lead_info.html", lead_fields)
-	frappe.publish_realtime(event='msgprint',message=popup_content,user="anil@avissupport.com")
+	frappe.publish_realtime(event='msgprint',message=popup_content,user="Administrator")
 
 
 

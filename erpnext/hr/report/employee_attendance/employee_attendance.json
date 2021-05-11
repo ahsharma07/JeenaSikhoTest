@@ -1,0 +1,32 @@
+{
+ "add_total_row": 0,
+ "creation": "2021-05-08 10:50:54.336094",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "idx": 0,
+ "is_standard": "Yes",
+ "letter_head": "jeena sikho",
+ "modified": "2021-05-08 10:53:57.896283",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Employee Attendance",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "query": "select B.employee,B.employee_name,max(B.January) as \"Jan\",\r\n    (case when max(B.January)>0 then (max(B.Feburary)-max(B.January)) else 0 end) as \"Variance in Jan\",\r\n    max(B.Feburary) as \"Feb\",\r\n    (case when max(B.Feburary)>0 then (max(B.March)-max(B.Feburary)) else 0 end) as \"Variance in Feb\",\r\n    max(B.March) as \"Mar\",\r\n    (case when max(B.March)>0 then (max(B.April)-max(B.March)) else 0 end) as \"Variance in Mar\",\r\n    max(B.April) as \"Apr\",\r\n    (case when max(B.April)>0 then (max(B.May)-max(B.April)) else 0 end) as \"Variance in Apr\",\r\n    max(B.May) as \"May\",\r\n    (case when max(B.May)>0 then (max(B.June)-max(B.May)) else 0 end) as \"Variance in May\",\r\n    max(B.June) as \"Jun\",\r\n    (case when max(B.June)>0 then (max(B.July)-max(B.June)) else 0 end) as \"Variance in Jun\",\r\n    max(B.July) as \"Jul\",\r\n    (case when max(B.July)>0 then (max(B.August)-max(B.July)) else 0 end) as \"Variance in Jul\",\r\n    max(B.August) as \"Aug\",\r\n    (case when max(B.August)>0 then (max(B.September)-max(B.August)) else 0 end) as \"Variance in Aug\",\r\n    max(B.September) as \"Sep\",\r\n    (case when max(B.September)>0 then (max(B.October)-max(B.September)) else 0 end) as \"Variance in Sep\",\r\n    max(B.October) as \"Oct\",\r\n    (case when max(B.October)>0 then (max(B.November)-max(B.October)) else 0 end) as \"Variance in Oct\",\r\n    max(B.November) as \"Nov\",\r\n    (case when max(B.November)>0 then (max(B.December)-max(B.November)) else 0 end) as \"Variance in Nov\",\r\n    max(B.December) as \"Dec\"\r\n    \r\nFrom(\r\n    SELECT E.employee as employee,E.employee_name as employee_name,A.base as base,E.status as status,\r\n    (case when month(A.from_date)<=1 then A.base else 0 end) as January,\r\n    (case when month(A.from_date)<=2 then A.base else 0 end) as Feburary,\r\n    (case when month(A.from_date)<=3 then A.base else 0 end) as March,\r\n    (case when month(A.from_date)<=4 then A.base else 0 end) as April,\r\n    (case when month(A.from_date)<=5 then A.base else 0 end) as May,\r\n    (case when month(A.from_date)<=6 then A.base else 0 end) as June,\r\n    (case when month(A.from_date)<=7 then A.base else 0 end) as July,\r\n    (case when month(A.from_date)<=8 then A.base else 0 end) as August,\r\n    (case when month(A.from_date)<=9 then A.base else 0 end) as September,\r\n    (case when month(A.from_date)<=10 then A.base else 0 end) as October,\r\n    (case when month(A.from_date)<=11 then A.base else 0 end) as November,\r\n    (case when month(A.from_date)<=12 then A.base else 0 end) as December\r\n    FROM `tabSalary Structure Assignment` A , `tabEmployee` E\r\n    where A.docstatus = 1 and year(A.from_date)=%(year)s and E.employee=A.employee)B\r\n    WHERE B.status = %(status)s\r\n    GROUP BY B.employee\r\n    Order by B.employee\r\n    \r\n   ",
+ "ref_doctype": "Attendance",
+ "report_name": "Employee Attendance",
+ "report_type": "Query Report",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "HR User"
+  },
+  {
+   "role": "HR Manager"
+  }
+ ]
+}

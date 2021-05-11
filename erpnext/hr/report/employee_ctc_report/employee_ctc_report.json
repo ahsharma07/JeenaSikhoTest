@@ -1,0 +1,32 @@
+{
+ "add_total_row": 0,
+ "creation": "2021-04-21 16:32:49.439526",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "idx": 0,
+ "is_standard": "Yes",
+ "letter_head": "jeena sikho",
+ "modified": "2021-04-25 20:20:21.690007",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Employee CTC Report",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "query": "select\n\nssa.employee as \"Employee:Link/Employee:100\",\nssa.employee_name as \"Employee Name:100\",\nssa.department as \"Department:100\",\nssa.company as \"Company:100\",\nssa.designation as \"Designation:100\",\ne.date_of_joining as \"Date Of Joining:Date\",\ne.date_of_birth as \"Date Of Birth:Date\",\nssa.salary_structure as \"Salary Structure:100\",\n\nssa.base as \"Gross Salary:Currency:100\",\nCase\nWhen ssa.base < 15000 then ssa.base*12/100\nwhen ssa.base >=15000 then 15000*12/100 end as \"Employee PF Share:100\",\nCase\nWhen ssa.base < 15000 then ssa.base*12/100\nwhen ssa.base >=15000 then 15000*12/100 end as \"PF Employer's Share:100\" ,\n\nCase\nWhen ssa.base < 21000 then ssa.base*.75/100\nwhen ssa.base >=21000 then 21000*.75/100 end as \"Employee ESI Share:100\",\n\nCase\nWhen ssa.base < 21000 then ssa.base*3.25/100\nwhen ssa.base >=21000 then 21000*3.25/100 end as \"ESI Employer's Share\",\n\ne.ta_da_amount as \"TA & DA Amount\",\n\nssa.base + e.ta_da_amount +\nCase\nWhen ssa.base < 15000 then ssa.base*12/100\nwhen ssa.base >=15000 then 15000*12/100 end  +\nCase\nWhen ssa.base < 21000 then ssa.base*3.25/100\nwhen ssa.base >=21000 then 21000*3.25/100 end as \"Employee CTC:Currency:100\"\n\n\nfrom `tabSalary Structure Assignment` ssa , `tabEmployee`e\nwhere ssa.employee=e.name\n",
+ "ref_doctype": "Salary Structure Assignment",
+ "report_name": "Employee CTC Report",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "HR Manager"
+  },
+  {
+   "role": "HR User"
+  }
+ ]
+}

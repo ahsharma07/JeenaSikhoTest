@@ -5,7 +5,8 @@ from __future__ import unicode_literals
 import frappe
 from frappe.utils import flt
 from frappe import _
-
+import pandas as pd
+import datetime
 def execute(filters=None):
 	if not filters: filters = {}
 	salary_slips = get_salary_slips(filters)
@@ -15,35 +16,32 @@ def execute(filters=None):
 	ss_earning_map = get_ss_earning_map(salary_slips)
 	ss_ded_map = get_ss_ded_map(salary_slips)
 	doj_map = get_employee_doj_map()
-	frappe.msgprint(str(doj_map))
+#	frappe.msgprint(str(doj_map))
 
 	data = []
 	for ss in salary_slips:
 		esic = frappe.db.get_value("Employee",ss.employee,"training_batch")
 		row = [ss.name, ss.employee, ss.employee_name, doj_map.get(ss.employee), esic,ss.branch, ss.department, ss.designation,
-			ss.company, ss.start_date, ss.end_date, ss.leave_without_pay, ss.payment_days]
-
+			ss.company, ss.start_date, ss.end_date, ss.payment_days]
 		if not ss.branch == None:columns[3] = columns[3].replace('-1','120')
 		if not ss.department  == None: columns[4] = columns[4].replace('-1','120')
 		if not ss.designation  == None: columns[5] = columns[5].replace('-1','120')
 		if not ss.leave_without_pay  == None: columns[9] = columns[9].replace('-1','130')
-
-
 		for e in earning_types:
 			row.append(ss_earning_map.get(ss.name, {}).get(e))
-
 		row += [ss.gross_pay]
-
 		for d in ded_types:
 			row.append(ss_ded_map.get(ss.name, {}).get(d))
-
 		row.append(ss.total_loan_repayment)
-
 		row += [ss.total_deduction, ss.net_pay]
-
 		data.append(row)
-
-	return columns, data
+	final_list=[]
+	for dat in data:
+		b = [0 if x is None else x for x in dat] 
+		final_list.append(b)
+		frappe.msgprint(str(dat))
+	frappe.msgprint(str(data))
+	return columns,final_list
 
 def get_columns(salary_slips):
 	"""
@@ -51,21 +49,18 @@ def get_columns(salary_slips):
 		_("Salary Slip ID") + ":Link/Salary Slip:150",_("Employee") + ":Link/Employee:120", _("Employee Name") + "::140",
 		_("Date of Joining") + "::80", _("Branch") + ":Link/Branch:120", _("Department") + ":Link/Department:120",
 		_("Designation") + ":Link/Designation:120", _("Company") + ":Link/Company:120", _("Start Date") + "::80",
-		_("End Date") + "::80", _("Leave Without Pay") + ":Float:130", _("Payment Days") + ":Float:120"
-	]
+		_("End Date") + "::80", _("Leave Without Pay") + ":Float:130", _("Payment Days") + ":Float:120"	]
 	"""
 	columns = [
 		_("Salary Slip ID") + ":Link/Salary Slip:150",_("Employee") + ":Link/Employee:120", _("Employee Name") + "::140",
 		_("Date of Joining") + "::80", _("ESIC Number") + "::80",_("Branch") + ":Link/Branch:-1", _("Department") + ":Link/Department:-1",
 		_("Designation") + ":Link/Designation:-1", _("Company") + ":Link/Company:120", _("Start Date") + "::80",
-		_("End Date") + "::80", _("Leave Without Pay") + ":Float:-1", _("Payment Days") + ":Float:120"
+		_("End Date") + "::80",  _("Payment Days") + ":Float:120"
 	]
 
 	salary_components = {_("Earning"): [], _("Deduction"): []}
-
-	for component in frappe.db.sql("""select distinct sd.salary_component, sc.type
-		from `tabSalary Detail` sd, `tabSalary Component` sc
-		where sc.name=sd.salary_component and sd.amount != 0 and sd.parent in (%s)""" %
+#	frappe.msgprint(str(salary_slips))
+	for component in frappe.db.sql("""select distinct sc.salary_component,sc.type from `tabSalary Component` sc  , `tabSalary Detail` sd where sd.parent in (%s)""" %
 		(', '.join(['%s']*len(salary_slips))), tuple([d.name for d in salary_slips]), as_dict=1):
 		salary_components[_(component.type)].append(component.salary_component)
 

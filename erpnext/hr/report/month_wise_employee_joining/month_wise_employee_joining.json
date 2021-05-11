@@ -1,0 +1,32 @@
+{
+ "add_total_row": 0,
+ "creation": "2021-04-07 11:36:30.176782",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "idx": 0,
+ "is_standard": "Yes",
+ "letter_head": "jeena sikho",
+ "modified": "2021-04-07 12:02:33.047004",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "month wise employee joining",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "query": "select employee , employee_name,date_of_joining from `tabEmployee` where monthname(date_of_joining)=%(month)s and  year(date_of_joining)=%(year)s",
+ "ref_doctype": "HR Settings",
+ "report_name": "month wise employee joining",
+ "report_type": "Query Report",
+ "roles": [
+  {
+   "role": "Nursing User"
+  },
+  {
+   "role": "Healthcare Administrator"
+  },
+  {
+   "role": "Physician"
+  }
+ ]
+}

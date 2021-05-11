@@ -840,16 +840,21 @@ class SalarySlip(TransactionBase):
 		self.total_principal_amount = 0
 
 		for loan in self.get_loan_details():
+			amount = (self.gross_pay - self.total_deduction)
+			if amount > loan.total_payment:
+				loan_amount = loan.total_payment
+			else:
+				loan_amount = amount
 			self.append('loans', {
 				'loan': loan.name,
-				'total_payment': loan.total_payment,
+				'total_payment': loan_amount,
 				'interest_amount': loan.interest_amount,
 				'principal_amount': loan.principal_amount,
 				'loan_account': loan.loan_account,
 				'interest_income_account': loan.interest_income_account
 			})
 
-			self.total_loan_repayment += loan.total_payment
+			self.total_loan_repayment += loan_amount
 			self.total_interest_amount += loan.interest_amount
 			self.total_principal_amount += loan.principal_amount
 
@@ -953,3 +958,19 @@ def unlink_ref_doc_from_salary_slip(ref_no):
 def generate_password_for_pdf(policy_template, employee):
 	employee = frappe.get_doc("Employee", employee)
 	return policy_template.format(**employee.as_dict())
+
+def permission_query(user):
+#	frappe.msgprint(str(self.docstatus))
+#	if self.docstatus == 1:
+#		return True
+	if not user: user = frappe.session.user
+	u = frappe.get_doc("User", user)
+
+	roles = [ur.role for ur in u.roles]
+	if not ("Payroll" in roles) and not ("System Manager" in roles):
+		return """(`docstatus`=1)"""
+#	return """(`docstatus`=%(user)s)""" % {
+
+#         "user": frappe.db.escape(user),
+
+#     }

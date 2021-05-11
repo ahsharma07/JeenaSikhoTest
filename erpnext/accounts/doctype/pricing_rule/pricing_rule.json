@@ -172,7 +172,6 @@
    "label": "Coupon Code Based"
   },
   {
-   "collapsible": 1,
    "depends_on": "eval:doc.apply_on != 'Transaction'",
    "fieldname": "section_break_18",
    "fieldtype": "Section Break",
@@ -554,7 +553,7 @@
  ],
  "icon": "fa fa-gift",
  "idx": 1,
- "modified": "2019-12-18 17:29:22.957077",
+ "modified": "2021-04-27 13:09:45.462549",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Pricing Rule",

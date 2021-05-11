@@ -1,0 +1,25 @@
+frappe.query_reports["month wise employee joining"] = {
+        "filters": [
+                {
+                "fieldname":"month",
+                "label":__("Month"),
+                "fieldtype":"Select",
+                "options":["January","February","March","April","May","June","July","August","September","October","November","December"],
+                "default": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November",
+                                "December"][frappe.datetime.str_to_obj(frappe.datetime.get_today()).getMonth()],
+                "reqd":1
+                },
+                {
+                "fieldname":"year",
+                "label": __("Year"),
+                "fieldtype": "Select",
+		"options" : ["2020", "2021", "2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030"],
+                "default": ["2020", "2021", "2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030"]
+                               [frappe.datetime.str_to_obj(frappe.datetime.get_today()).getyear()],
+                "reqd":1,
+                },
+
+        ]
+};
+
+

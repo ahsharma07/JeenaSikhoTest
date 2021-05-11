@@ -14,6 +14,8 @@ from frappe.desk.notifications import clear_doctype_notifications
 from frappe.model.mapper import get_mapped_doc
 from frappe.model.utils import get_fetch_values
 from frappe.utils import cint, flt
+from frappe.desk.form import assign_to
+
 
 form_grid_templates = {
 	"items": "templates/form_grid/item_grid.html"
@@ -130,7 +132,7 @@ class DeliveryNote(SellingController):
 		super(DeliveryNote, self).validate_with_previous_doc({
 			"Sales Order": {
 				"ref_dn_field": "against_sales_order",
-				"compare_fields": [["customer", "="], ["company", "="], ["project", "="], ["currency", "="]]
+				"compare_fields": [["customer", "="], ["project", "="], ["currency", "="]]
 			},
 			"Sales Order Item": {
 				"ref_dn_field": "so_detail",
@@ -221,6 +223,11 @@ class DeliveryNote(SellingController):
 		self.cancel_packing_slips()
 
 		self.make_gl_entries_on_cancel()
+		try:
+			assign_to.add({"assign_to": 'neha@extensioncrm.com',"doctype": "Delivery Note","name": self.name,
+					"description":"Cancelled Delivery Note Assigned"})
+		except:
+			pass
 
 	def check_credit_limit(self):
 		from erpnext.selling.doctype.customer.customer import check_credit_limit

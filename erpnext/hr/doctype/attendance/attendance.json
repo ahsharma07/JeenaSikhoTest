@@ -145,12 +145,10 @@
    "read_only": 1
   },
   {
-   "depends_on": "working_hours",
    "fieldname": "working_hours",
    "fieldtype": "Float",
    "label": "Working Hours",
-   "precision": "1",
-   "read_only": 1
+   "precision": "1"
   },
   {
    "fieldname": "shift",
@@ -174,7 +172,7 @@
  "icon": "fa fa-ok",
  "idx": 1,
  "is_submittable": 1,
- "modified": "2021-03-12 14:47:46.530218",
+ "modified": "2021-05-10 13:46:01.210356",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Attendance",

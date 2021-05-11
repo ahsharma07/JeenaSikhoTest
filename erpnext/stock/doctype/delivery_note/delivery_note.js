@@ -144,6 +144,29 @@ erpnext.stock.DeliveryNoteController = erpnext.selling.SellingController.extend(
 						})
 					}, __("Get items from"));
 			}
+			 if (this.frm.doc.docstatus===0) {
+                		var me = this;
+		                this.$material_request_btn = this.frm.add_custom_button(__('Material Request'),
+                	        function() {
+                        	        erpnext.utils.map_current_doc({
+                                	        method: "erpnext.accounts.doctype.sales_invoice.sales_invoice.make_material_request",
+	                                        source_doctype: "Material Request",
+        	                                target: me.frm,
+                	                        setters: {
+                        	                        customer: me.frm.doc.customer,
+                                	        },
+                                        	get_query_filters: {
+	                                                material_request_type: "Purchase",
+        	                                        docstatus: 1,
+                	                                status: ["!=", "Stopped"],
+                        	                        per_ordered: ["<", 99.99],
+//                              	                company: me.frm.doc.company
+                                        	}
+	                                })
+        	                }, __("Get items from"));
+
+			}
+//		},
 		}
 
 		if (!doc.is_return && doc.status!="Closed") {

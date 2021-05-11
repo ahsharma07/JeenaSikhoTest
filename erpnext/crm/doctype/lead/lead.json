@@ -11,25 +11,26 @@
   "lead_details",
   "naming_series",
   "lead_name",
+  "status",
   "company_name",
-  "email_id",
   "gender",
   "col_break123",
   "lead_owner",
-  "status",
   "source",
-  "phone",
   "lead_source_channel",
+  "phone",
+  "update_profile",
+  "email_id",
   "customer",
   "campaign_name",
   "image",
   "personal_details_section",
   "age",
   "height",
-  "how_many_years",
   "column_break_18",
   "weight",
-  "diseases",
+  "sb2",
+  "disease_table",
   "section_break_21",
   "query_category",
   "section_break_24",
@@ -153,7 +154,6 @@
    "oldfieldname": "status",
    "oldfieldtype": "Select",
    "options": "Lead\nOpen\nReplied\nOpportunity\nQuotation\nLost Quotation\nInterested\nConverted\nDo Not Contact",
-   "reqd": 1,
    "search_index": 1
   },
   {
@@ -396,6 +396,7 @@
    "label": "Blog Subscriber"
   },
   {
+   "collapsible": 1,
    "fieldname": "personal_details_section",
    "fieldtype": "Section Break",
    "label": "Personal Details"
@@ -404,29 +405,19 @@
    "fieldname": "age",
    "fieldtype": "Select",
    "label": "Age",
-   "options": "\nLess than 15\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26\n27\n28\n29\n30\n31\n32\n33\n34\n35\n36\n37\n38\n39\n40\n41\n42\n43\n44\n45\n46\n47\n48\n49\n50\n51\n52\n53\n54\n55\n56\n57\n58\n59\n60\n61\n62\n63\n64\n65\n66\n67\n68\n69\n70\nMore than 70",
-   "reqd": 1
+   "options": "\nLess than 15\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26\n27\n28\n29\n30\n31\n32\n33\n34\n35\n36\n37\n38\n39\n40\n41\n42\n43\n44\n45\n46\n47\n48\n49\n50\n51\n52\n53\n54\n55\n56\n57\n58\n59\n60\n61\n62\n63\n64\n65\n66\n67\n68\n69\n70\nMore than 70"
   },
   {
    "fieldname": "weight",
    "fieldtype": "Select",
    "label": "Weight",
-   "options": "\nLess than 25\n26\n27\n28\n29\n30\n31\n32\n33\n34\n35\n36\n37\n38\n39\n40\n41\n42\n43\n44\n45\n46\n47\n48\n49\n50\n51\n52\n53\n54\n55\n56\n57\n58\n59\n60\n61\n62\n63\n64\n65\n66\n67\n68\n69\n70\n71\n72\n73\n74\n75\n76\n77\n78\n79\n80\n81\n82\n83\n84\n85\n86\n87\n88\n89\n90\nMore than 90",
-   "reqd": 1
+   "options": "\nLess than 25\n26\n27\n28\n29\n30\n31\n32\n33\n34\n35\n36\n37\n38\n39\n40\n41\n42\n43\n44\n45\n46\n47\n48\n49\n50\n51\n52\n53\n54\n55\n56\n57\n58\n59\n60\n61\n62\n63\n64\n65\n66\n67\n68\n69\n70\n71\n72\n73\n74\n75\n76\n77\n78\n79\n80\n81\n82\n83\n84\n85\n86\n87\n88\n89\n90\nMore than 90"
   },
   {
    "fieldname": "height",
    "fieldtype": "Select",
    "label": "Height",
-   "options": "\nLess than 4 feet\n4.1\n4.2\n4.3\n4.4\n4.5\n4.6\n4.7\n4.8\n4.9\n4.10\n4.11\n4.12\n5.0\n5.1\n5.2\n5.3\n5.4\n5.5\n5.6\n5.7\n5.8\n5.9\n5.10\n5.11\n5.12\n6.0\n6.1\n6.2\n6.3\n6.4\n6.5\n6.6\n6.7\n6.8\n6.9\n6.10\n6.11\n6.12\nMore than 7.0",
-   "reqd": 1
-  },
-  {
-   "fieldname": "diseases",
-   "fieldtype": "Table MultiSelect",
-   "label": "Diseases",
-   "options": "Diseases TableMultiselect",
-   "reqd": 1
+   "options": "\nLess than 4 feet\n4.1\n4.2\n4.3\n4.4\n4.5\n4.6\n4.7\n4.8\n4.9\n4.10\n4.11\n4.12\n5.0\n5.1\n5.2\n5.3\n5.4\n5.5\n5.6\n5.7\n5.8\n5.9\n5.10\n5.11\n5.12\n6.0\n6.1\n6.2\n6.3\n6.4\n6.5\n6.6\n6.7\n6.8\n6.9\n6.10\n6.11\n6.12\nMore than 7.0"
   },
   {
    "fieldname": "section_break_21",
@@ -533,22 +524,32 @@
    "options": "\nInbound\nOutbound"
   },
   {
-   "fieldname": "lead_source_channel",
-   "fieldtype": "Select",
-   "label": "Lead Source Channel",
-   "options": "\nDivya TV\nManoranjan TV"
+   "fieldname": "disease_table",
+   "fieldtype": "Table",
+   "label": "Diseases Table",
+   "options": "Disease Child"
   },
   {
-   "fieldname": "how_many_years",
-   "fieldtype": "Select",
-   "label": "From How Many Years ",
-   "options": "\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\nMore than 20"
+   "fieldname": "sb2",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "update_profile",
+   "fieldtype": "Check",
+   "label": "Update Phone No"
+  },
+  {
+   "fieldname": "lead_source_channel",
+   "fieldtype": "Link",
+   "label": "Lead Source Channel",
+   "options": "Lead Source Channel"
   }
  ],
  "icon": "fa fa-user",
  "idx": 5,
  "image_field": "image",
- "modified": "2021-03-08 11:03:08.844564",
+ "modified": "2021-04-26 10:55:12.817046",
  "modified_by": "Administrator",
  "module": "CRM",
  "name": "Lead",

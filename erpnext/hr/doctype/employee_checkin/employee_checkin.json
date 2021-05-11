@@ -1,5 +1,4 @@
 {
- "actions": [],
  "allow_import": 1,
  "autoname": "EMP-CKIN-.MM.-.YYYY.-.######",
  "creation": "2019-06-10 11:56:34.536413",
@@ -18,7 +17,13 @@
   "shift_start",
   "shift_end",
   "shift_actual_start",
-  "shift_actual_end"
+  "shift_actual_end",
+  "longitude",
+  "latitude",
+  "city",
+  "state",
+  "area",
+  "my_location"
  ],
  "fields": [
   {
@@ -67,6 +72,7 @@
   {
    "fieldname": "device_id",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Location / Device ID"
   },
   {
@@ -105,10 +111,48 @@
    "fieldtype": "Datetime",
    "hidden": 1,
    "label": "Shift Actual End"
+  },
+  {
+   "fieldname": "longitude",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "longitude",
+   "read_only": 1
+  },
+  {
+   "fieldname": "latitude",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "latitude",
+   "read_only": 1
+  },
+  {
+   "fieldname": "city",
+   "fieldtype": "Data",
+   "label": "City",
+   "read_only": 1
+  },
+  {
+   "fieldname": "state",
+   "fieldtype": "Data",
+   "label": "State",
+   "read_only": 1
+  },
+  {
+   "fieldname": "area",
+   "fieldtype": "Data",
+   "label": "Area",
+   "read_only": 1
+  },
+  {
+   "fieldname": "my_location",
+   "fieldtype": "HTML",
+   "in_preview": 1,
+   "label": "My Location",
+   "search_index": 1
   }
  ],
- "links": [],
- "modified": "2020-01-23 04:57:42.551355",
+ "modified": "2021-04-10 11:56:17.798279",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Checkin",

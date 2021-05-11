@@ -9,6 +9,7 @@ from frappe.model.document import Document
 from frappe.utils import date_diff, add_days, getdate
 from erpnext.hr.doctype.employee.employee import is_holiday
 from erpnext.hr.utils import validate_dates
+from frappe.desk.form import assign_to
 
 class AttendanceRequest(Document):
 	def validate(self):
@@ -18,6 +19,7 @@ class AttendanceRequest(Document):
 				frappe.throw(_("Half day date should be in between from date and to date"))
 
 	def on_submit(self):
+		assign_to.remove(doctype="Attendance Request", name=self.name, assign_to="neha@extensioncrm.com")
 		self.create_attendance()
 
 	def on_cancel(self):
